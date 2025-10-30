@@ -1,7 +1,8 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Vivace.DTOs;
 
-
-namespace Vivace.Interfaces
+namespace Vivace.Service
 {
     public interface IRelatorioService
     {

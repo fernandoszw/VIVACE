@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Vivace.Models
 {
@@ -11,5 +8,7 @@ namespace Vivace.Models
         public string Numero { get; set; }
         public int MoradorId { get; set; }
         public Morador Morador { get; set; }
+
+        public ICollection<Pagamento> Pagamentos { get; set; }
     }
 }

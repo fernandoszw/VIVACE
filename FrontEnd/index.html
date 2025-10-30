@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vivace - Painel</title>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>Vivace — Painel Condominial</h1>
+        <div class="sub">Dashboard | Receitas | Unidades — Front simples em HTML/CSS/JS</div>
+      </div>
+      <div class="sub">API: <span id="apiUrlDisplay">http://localhost:5202</span></div>
+    </header>
+
+    <div class="grid">
+      <div class="left">
+        <!-- DASHBOARD -->
+        <section class="card" id="card-resumo">
+          <h3>Resumo Mensal</h3>
+          <div class="cards-row">
+            <div class="stat"><small>Receita</small><div class="value" id="receitaCard">R$ 0,00</div></div>
+            <div class="stat"><small>Despesa</small><div class="value" id="despesaCard">R$ 0,00</div></div>
+            <div class="stat"><small>Inadimplentes</small><div class="value" id="inadimplentesCard">0</div></div>
+          </div>
+
+          <h4 style="margin-top:14px">Evolução</h4>
+          <table id="evolucaoTable">
+            <thead><tr><th>Mês</th><th>Receita</th><th>Despesa</th></tr></thead>
+            <tbody><tr><td colspan="3">Carregando...</td></tr></tbody>
+          </table>
+        </section>
+
+        <!-- RECEITAS -->
+        <section class="card" id="card-receitas">
+          <h3>Gerenciar Receitas</h3>
+          <form id="formReceita">
+            <input type="hidden" id="receitaId" />
+            <div class="row">
+              <div><label>Descrição</label><input id="descricao" type="text" required /></div>
+              <div><label>Valor</label><input id="valor" type="number" step="0.01" required /></div>
+              <div><label>Data</label><input id="data" type="date" /></div>
+              <div><button class="btn" type="submit">Salvar</button></div>
+            </div>
+          </form>
+
+          <div id="status"></div>
+
+          <table id="tabelaReceitas">
+            <thead><tr><th>ID</th><th>Descrição</th><th>Valor</th><th>Data</th><th>Ações</th></tr></thead>
+            <tbody><tr><td colspan="5">Carregando...</td></tr></tbody>
+          </table>
+        </section>
+
+        <!-- UNIDADES -->
+        <section class="card" id="card-unidades">
+          <h3>Unidades & Moradores</h3>
+          <table id="tabelaUnidades">
+            <thead><tr><th>Unidade</th><th>Morador</th><th>Pagamentos</th></tr></thead>
+            <tbody><tr><td colspan="3">Carregando...</td></tr></tbody>
+          </table>
+        </section>
+      </div>
+
+      <aside class="right">
+        <div class="card">
+          <h3>Ações rápidas</h3>
+          <button id="btnRefresh" class="btn ghost">Atualizar tudo</button>
+          <button id="btnExportInadimplencia" class="btn ghost">Exportar Inadimplência</button>
+          <button id="btnGerarBalancete" class="btn ghost">Gerar Balancete</button>
+        </div>
+
+        <div class="card">
+          <h3>Informações</h3>
+          <p class="small">Abra com <b>Live Server</b> e deixe a API rodando em <b>localhost:5202</b>.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
