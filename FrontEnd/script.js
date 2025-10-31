@@ -1,108 +1,94 @@
-const API_BASE = "http://localhost:5202/api";
-document.getElementById("apiUrlDisplay").textContent = API_BASE;
+const API_BASE = localStorage.getItem('vivace_api') || 'http://localhost:5202/api';
 
-function fmtMoney(v){ return "R$ " + Number(v||0).toLocaleString("pt-BR",{minimumFractionDigits:2}); }
-function setStatus(msg,ok=true){
-  const el=document.getElementById("status");
-  el.textContent=msg; el.className=ok?"ok":"error";
-}
-function clearStatus(){ setStatus("",true); }
+// Funções utilitárias
+function fmtMoney(val){ return 'R$ '+val.toFixed(2).replace('.',','); }
 
-/* DASHBOARD */
-async function fetchResumo(){
-  try{
-    const r=await fetch(`${API_BASE}/dashboard/resumo`);
-    const d=await r.json();
-    document.getElementById("receitaCard").textContent=fmtMoney(d.receitaMensal||d.ReceitaMensal||0);
-    document.getElementById("despesaCard").textContent=fmtMoney(d.despesaMensal||d.DespesaMensal||0);
-    document.getElementById("inadimplentesCard").textContent=d.unidadesInadimplentes||0;
-  }catch(e){setStatus("Erro resumo: "+e.message,false);}
-}
-async function fetchEvolucao(){
-  const t=document.querySelector("#evolucaoTable tbody");
-  try{
-    const r=await fetch(`${API_BASE}/dashboard/evolucao`);
-    const d=await r.json();
-    t.innerHTML="";
-    d.forEach(i=>{
-      t.innerHTML+=`<tr><td>${i.mes||i.Mes}</td><td>${fmtMoney(i.receita||i.Receita)}</td><td>${fmtMoney(i.despesa||i.Despesa)}</td></tr>`;
-    });
-  }catch(e){t.innerHTML=`<tr><td colspan=3>Erro: ${e.message}</td></tr>`;}
+// CRC16 Pix
+function crc16(payload) {
+    let crc = 0xFFFF;
+    for (let i = 0; i < payload.length; i++) {
+        crc ^= payload.charCodeAt(i) << 8;
+        for (let j = 0; j < 8; j++) {
+            crc = (crc & 0x8000) != 0 ? ((crc << 1) ^ 0x1021) : (crc << 1);
+            crc &= 0xFFFF;
+        }
+    }
+    return crc.toString(16).toUpperCase().padStart(4, '0');
 }
 
-/* RECEITAS CRUD */
-const tbody=document.querySelector("#tabelaReceitas tbody");
+// Gerar QR Code Pix
+function gerarPixQRCode(chavePix, nomeRecebedor, cidade, valor, txid='***'){
+    const valorStr = valor.toFixed(2);
+    const payload =
+`00020126580014BR.GOV.BCB.PIX01${String(chavePix.length).padStart(2,'0')}${chavePix}520400005303986540${valorStr}5802BR5913${nomeRecebedor.padEnd(13,' ')}6009${cidade.padEnd(9,' ')}62070503${txid}6304`;
+    const payloadFinal = payload + crc16(payload);
+
+    const qrContainer = document.getElementById("qrcode");
+    qrContainer.innerHTML = "";
+    new QRCode(qrContainer,{text:payloadFinal,width:200,height:200});
+
+    document.getElementById("pixInfo").innerText =
+`Chave Pix: ${chavePix}
+Valor: R$ ${valorStr}
+TXID: ${txid}`;
+
+    document.getElementById("pixModal").style.display = "flex";
+}
+
+// Fechar modal
+document.getElementById("closeModal").addEventListener("click",()=>{
+    document.getElementById("pixModal").style.display="none";
+});
+
+// Listar Receitas
 async function listarReceitas(){
-  tbody.innerHTML="<tr><td colspan=5>Carregando...</td></tr>";
-  try{
-    const r=await fetch(`${API_BASE}/receitas`);
-    const d=await r.json();
-    tbody.innerHTML="";
-    d.forEach(r=>{
-      tbody.innerHTML+=`
-      <tr>
-        <td>${r.id}</td>
-        <td>${r.descricao}</td>
-        <td>${fmtMoney(r.valor)}</td>
-        <td>${r.data?new Date(r.data).toLocaleDateString():""}</td>
-        <td>
-          <button class="btn ghost" onclick="editar(${r.id},'${r.descricao}',${r.valor})">Editar</button>
-          <button class="btn" onclick="deletar(${r.id})">Del</button>
-        </td>
-      </tr>`;
-    });
-  }catch(e){tbody.innerHTML=`<tr><td colspan=5>Erro: ${e.message}</td></tr>`;}
+    const tbody = document.querySelector('#tabelaReceitas tbody');
+    try{
+        const d = await fetch(`${API_BASE}/receitas`).then(r=>r.json());
+        tbody.innerHTML = '';
+        d.forEach(r=>{
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${r.id}</td><td>${r.descricao}</td><td>${fmtMoney(r.valor)}</td><td>${r.data? new Date(r.data).toLocaleDateString():''}</td>`;
+            tbody.appendChild(tr);
+
+            // Clique para gerar QR Pix
+            tr.addEventListener("click",()=>{
+                const valorNum = r.valor;
+                const txid = `TX${Date.now()}${Math.floor(Math.random()*1000)}`;
+                gerarPixQRCode("seu-email@exemplo.com","Gabriel Muniz","Sao Paulo",valorNum,txid);
+            });
+        });
+    }catch(e){
+        tbody.innerHTML='<tr><td colspan="4">Não foi possível carregar. (API)</td></tr>';
+    }
 }
 
-async function salvar(e){
-  e.preventDefault();
-  const id=document.getElementById("receitaId").value;
-  const body={
-    descricao:document.getElementById("descricao").value,
-    valor:parseFloat(document.getElementById("valor").value),
-    data:document.getElementById("data").value||new Date().toISOString()
-  };
-  try{
-    let res;
-    if(id)
-      res=await fetch(`${API_BASE}/receitas/${id}`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-    else
-      res=await fetch(`${API_BASE}/receitas`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-    if(!res.ok) throw new Error(res.status);
-    setStatus(id?"Atualizada!":"Adicionada!");
-    e.target.reset(); document.getElementById("receitaId").value="";
-    listarReceitas(); fetchResumo(); fetchEvolucao();
-  }catch(err){setStatus("Erro: "+err.message,false);}
-}
-document.getElementById("formReceita").addEventListener("submit",salvar);
+// Relatórios
+document.getElementById('btnExportInadimplencia').addEventListener('click', async ()=>{
+    try{
+        const resp = await fetch(`${API_BASE}/relatorios/inadimplencia/excel`);
+        if(!resp.ok) throw new Error(resp.status);
+        const blob = await resp.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href=url; a.download='inadimplencia.xlsx'; a.click();
+        URL.revokeObjectURL(url);
+    }catch(e){ alert('Erro ao exportar: '+e.message);}
+});
 
-function editar(id,desc,val){ 
-  document.getElementById("receitaId").value=id;
-  document.getElementById("descricao").value=desc;
-  document.getElementById("valor").value=val;
-}
-async function deletar(id){
-  if(!confirm("Deletar receita?"))return;
-  await fetch(`${API_BASE}/receitas/${id}`,{method:"DELETE"});
-  listarReceitas(); fetchResumo(); fetchEvolucao();
-}
+document.getElementById('btnGerarBalancete').addEventListener('click', async ()=>{
+    const mes = new Date().getMonth()+1; const ano = new Date().getFullYear();
+    try{
+        const resp = await fetch(`${API_BASE}/relatorios/balancete?mes=${mes}&ano=${ano}`);
+        if(!resp.ok) throw new Error(resp.status);
+        const blob = await resp.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href=url; a.download=`balancete-${mes}-${ano}.pdf`; a.click();
+        URL.revokeObjectURL(url);
+    }catch(e){ alert('Erro ao gerar balancete: '+e.message);}
+});
 
-/* UNIDADES */
-async function listarUnidades(){
-  const t=document.querySelector("#tabelaUnidades tbody");
-  try{
-    const r=await fetch(`${API_BASE}/unidades`);
-    const d=await r.json();
-    t.innerHTML="";
-    d.forEach(u=>{
-      t.innerHTML+=`<tr><td>${u.numero}</td><td>${u.morador?.nome||u.morador}</td><td>${u.pagamentos?.length||0}</td></tr>`;
-    });
-  }catch(e){t.innerHTML=`<tr><td colspan=3>Erro: ${e.message}</td></tr>`;}
-}
-
-/* INIT */
+// Init
 async function init(){
-  await fetchResumo(); await fetchEvolucao(); await listarReceitas(); await listarUnidades();
+    await listarReceitas();
 }
-document.getElementById("btnRefresh").onclick=init;
 init();
