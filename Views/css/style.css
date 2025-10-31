@@ -1,0 +1,97 @@
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f1efe7;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .card {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .logo-container {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .logo-icon {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 1rem;
+    }
+
+    .logo-text {
+        height: 40px;
+        margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+        color: #4b4b4b;
+        font-size: 0.95rem;
+    }
+
+    label {
+        color: #104167;
+        display: block;
+        margin-bottom: 4px;
+        font-weight: 600;
+    }
+
+    input {
+        width: 100%;
+        padding: 0.6rem;
+        border: 2px solid #1b85c6;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+    }
+
+    button {
+        width: 100%;
+        background-color: #104167;
+        color: white;
+        padding: 0.75rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    button:hover {
+        opacity: 0.9;
+    }
+
+    .error {
+        background-color: #fee2e2;
+        border: 1px solid #ef4444;
+        color: #991b1b;
+        padding: 0.75rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+    }
+
+    .demo-box {
+        background-color: #dbeafe;
+        border: 2px solid #1b85c6;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+        color: #104167;
+    }
+
+    code {
+        background-color: white;
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+    }
