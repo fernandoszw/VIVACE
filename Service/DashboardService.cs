@@ -1,7 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Vivace.Context;
-using Vivace.DTOs;
+using Vivace.Interfaces;
 using Vivace.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using VIVACE.Models;
 
 namespace Vivace.Service
 {
@@ -14,113 +18,61 @@ namespace Vivace.Service
             _context = context;
         }
 
-        public async Task<List<DashBoardResumoDto>> ObterTodosMesesAsync()
+        public async Task<List<Dashboard>> ObterTodosMesesAsync()
         {
-            var receitas = await _context.Receitas.OrderBy(r => r.Ano).ThenBy(r => r.Mes).ToListAsync();
-            var resumo = new List<DashBoardResumoDto>();
-
-            foreach (var r in receitas)
-            {
-                var mesNumero = DateTime.ParseExact(r.Mes, "MMMM", null).Month;
-
-                var despesas = await _context.Despesas
-                    .Where(d => d.Ano == r.Ano && d.MesNumero == mesNumero)
-                    .Select(d => new DespesaDto { Nome = d.Nome, Valor = d.Valor, Mes = r.Mes, Ano = r.Ano })
-                    .ToListAsync();
-
-                resumo.Add(new DashBoardResumoDto
-                {
-                    Mes = r.Mes,
-                    Ano = r.Ano,
-                    Receita = r.Valor,
-                    Despesa = despesas.Sum(d => d.Valor),
-                    Despesas = despesas,
-                    Taxa = 0
-                });
-            }
-
-            return resumo;
-        }
-
-        public async Task<DashBoardResumoDto> AdicionarMesAsync(DashBoardResumoDto mes)
-        {
-            var mesNumero = DateTime.ParseExact(mes.Mes, "MMMM", null).Month;
-
-            var receita = new Receita
-            {
-                Mes = mes.Mes,
-                Ano = mes.Ano,
-                Valor = mes.Receita
-            };
-            _context.Receitas.Add(receita);
-
-            if (mes.Despesas != null)
-            {
-                foreach (var d in mes.Despesas)
-                {
-                    _context.Despesas.Add(new Despesa
-                    {
-                        Nome = d.Nome,
-                        MesNumero = mesNumero,
-                        Ano = mes.Ano,
-                        Valor = d.Valor
-                    });
-                }
-            }
-
-            await _context.SaveChangesAsync();
-            return mes;
-        }
-
-        public async Task RemoverMesAsync(string mes, int ano)
-        {
-            var mesNumero = DateTime.ParseExact(mes, "MMMM", null).Month;
-
-            var receitas = await _context.Receitas
-                .Where(r => r.Ano == ano && DateTime.ParseExact(r.Mes, "MMMM", null).Month == mesNumero)
-                .ToListAsync();
-            _context.Receitas.RemoveRange(receitas);
-
-            var despesas = await _context.Despesas
-                .Where(d => d.Ano == ano && d.MesNumero == mesNumero)
-                .ToListAsync();
-            _context.Despesas.RemoveRange(despesas);
-
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<List<DespesaDto>> ObterDespesasPorMesAsync(string mes, int ano)
-        {
-            var mesNumero = DateTime.ParseExact(mes, "MMMM", null).Month;
-
-            var despesas = await _context.Despesas
-                .Where(d => d.Ano == ano && d.MesNumero == mesNumero)
-                .Select(d => new DespesaDto
-                {
-                    Nome = d.Nome,
-                    Valor = d.Valor,
-                    Mes = mes,
-                    Ano = ano
-                })
+            // Usa AsNoTracking para evitar problemas de rastreamento
+            var dashboards = await _context.Dashboards
+                .Include(d => d.Despesas)
+                .AsNoTracking()
                 .ToListAsync();
 
-            return despesas;
+            // Ordena por ano e número do mês
+            var mesesOrdenados = dashboards
+                .OrderBy(d => d.Ano)
+                .ThenBy(d => DateTime.ParseExact(d.Mes, "MMMM", null).Month)
+                .ToList();
+
+            return mesesOrdenados;
         }
 
-        public async Task AdicionarDespesaAsync(string mes, int ano, DespesaDto despesa)
+        public async Task<Dashboard> AdicionarMesAsync(Dashboard dashboard)
         {
-            var mesNumero = DateTime.ParseExact(mes, "MMMM", null).Month;
-
-            var novaDespesa = new Despesa
-            {
-                Nome = despesa.Nome,
-                Valor = despesa.Valor,
-                MesNumero = mesNumero,
-                Ano = ano
-            };
-
-            _context.Despesas.Add(novaDespesa);
+            _context.Dashboards.Add(dashboard);
             await _context.SaveChangesAsync();
+            return dashboard;
+        }
+
+        public async Task<Despesa> AdicionarDespesaAsync(int dashboardId, Despesa despesa)
+        {
+            var dash = await _context.Dashboards
+                .Include(d => d.Despesas)
+                .FirstOrDefaultAsync(d => d.Id == dashboardId);
+
+            if (dash == null) throw new KeyNotFoundException("Dashboard não encontrado");
+
+            // Limite da despesa total
+            decimal somaAtual = dash.Despesas.Sum(d => d.Valor);
+            if (somaAtual + despesa.Valor > dash.Despesa)
+                throw new InvalidOperationException("A soma das despesas não pode exceder a despesa total do mês");
+
+            despesa.DashboardId = dashboardId;
+            _context.Despesas.Add(despesa);
+            await _context.SaveChangesAsync();
+            return despesa;
+        }
+
+        public async Task<bool> RemoverMesAsync(int dashboardId)
+        {
+            var dash = await _context.Dashboards
+                .Include(d => d.Despesas)
+                .FirstOrDefaultAsync(d => d.Id == dashboardId);
+
+            if (dash == null) return false;
+
+            _context.Despesas.RemoveRange(dash.Despesas);
+            _context.Dashboards.Remove(dash);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

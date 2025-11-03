@@ -1,13 +1,15 @@
-using Vivace.DTOs;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Vivace.Models;
+using VIVACE.Models;
 
-namespace Vivace.Service
+namespace Vivace.Interfaces
 {
     public interface IDashboardService
     {
-        Task<List<DashBoardResumoDto>> ObterTodosMesesAsync();
-        Task<DashBoardResumoDto> AdicionarMesAsync(DashBoardResumoDto mes);
-        Task RemoverMesAsync(string mes, int ano);
-        Task<List<DespesaDto>> ObterDespesasPorMesAsync(string mes, int ano);
-        Task AdicionarDespesaAsync(string mes, int ano, DespesaDto despesa); // <-- aqui
+        Task<List<Dashboard>> ObterTodosMesesAsync();
+        Task<Dashboard> AdicionarMesAsync(Dashboard dashboard);
+        Task<Despesa> AdicionarDespesaAsync(int dashboardId, Despesa despesa);
+        Task<bool> RemoverMesAsync(int dashboardId);
     }
 }

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Vivace.DTOs;
-using Vivace.Service;
+using Vivace.Interfaces;
+using Vivace.Models;
+using System.Threading.Tasks;
+using VIVACE.Models;
 
 namespace Vivace.Controllers
 {
@@ -8,46 +10,47 @@ namespace Vivace.Controllers
     [Route("api/[controller]")]
     public class DashboardController : ControllerBase
     {
-        private readonly IDashboardService _dashboardService;
+        private readonly IDashboardService _service;
 
-        public DashboardController(IDashboardService dashboardService)
+        public DashboardController(IDashboardService service)
         {
-            _dashboardService = dashboardService;
+            _service = service;
         }
 
-        [HttpGet("todos")]
-        public async Task<IActionResult> GetResumo()
+        [HttpGet("meses")]
+        public async Task<IActionResult> ObterMeses()
         {
-            var resumo = await _dashboardService.ObterTodosMesesAsync();
-            return Ok(resumo);
+            var meses = await _service.ObterTodosMesesAsync();
+            return Ok(meses);
         }
 
-        [HttpPost("adicionar-mes")]
-        public async Task<IActionResult> AdicionarMes([FromBody] DashBoardResumoDto mes)
+        [HttpPost("adicionar")]
+        public async Task<IActionResult> AdicionarMes(Dashboard dashboard)
         {
-            var resultado = await _dashboardService.AdicionarMesAsync(mes);
-            return Ok(resultado);
+            var d = await _service.AdicionarMesAsync(dashboard);
+            return Ok(d);
         }
 
-        [HttpDelete("remover-mes")]
-        public async Task<IActionResult> RemoverMes([FromQuery] string mes, [FromQuery] int ano)
+        [HttpPost("adicionar-despesa/{dashboardId}")]
+        public async Task<IActionResult> AdicionarDespesa(int dashboardId, Despesa despesa)
         {
-            await _dashboardService.RemoverMesAsync(mes, ano);
-            return NoContent();
+            try
+            {
+                var d = await _service.AdicionarDespesaAsync(dashboardId, despesa);
+                return Ok(d);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
-        [HttpGet("despesas")]
-        public async Task<IActionResult> ObterDespesas([FromQuery] string mes, [FromQuery] int ano)
+        [HttpDelete("remover/{dashboardId}")]
+        public async Task<IActionResult> RemoverMes(int dashboardId)
         {
-            var despesas = await _dashboardService.ObterDespesasPorMesAsync(mes, ano);
-            return Ok(despesas);
-        }
-
-        [HttpPost("adicionar-despesa")]
-        public async Task<IActionResult> AdicionarDespesa([FromQuery] string mes, [FromQuery] int ano, [FromBody] DespesaDto despesaDto)
-        {
-            await _dashboardService.AdicionarDespesaAsync(mes, ano, despesaDto);
-            return Ok(despesaDto);
+            var result = await _service.RemoverMesAsync(dashboardId);
+            if (!result) return NotFound();
+            return Ok();
         }
     }
 }
