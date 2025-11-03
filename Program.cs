@@ -9,7 +9,6 @@ builder.Services.AddDbContext<FinancasContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConexaoPadrao")));
 
 builder.Services.AddScoped<IDashboardService, DashboardService>();
-builder.Services.AddScoped<IRelatorioService, RelatorioService>();
 
 builder.Services.AddControllers();
 

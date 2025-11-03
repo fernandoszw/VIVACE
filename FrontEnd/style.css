@@ -1,39 +1,139 @@
-:root{
---bg:#f3efe8; /* bege claro */
---sidebar:#143B63; /* azul escuro */
---card:#ffffff;
---muted:#6b7280;
---primary:#2b6ef6;
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f5f8fb;
+  color: #333;
+  margin: 0;
+  padding: 20px;
 }
-*{box-sizing:border-box}
-body{margin:0;font-family:Inter,system-ui,Arial;background:var(--bg);}
-.app{display:flex;min-height:100vh}
-.sidebar{width:220px;background:var(--sidebar);color:#fff;display:flex;flex-direction:column;padding:20px}
-.brand{display:flex;align-items:center;gap:10px;margin-bottom:20px}
-.brand .logo{width:40px;height:40px;border-radius:8px;background:#fff;color:var(--sidebar);display:flex;align-items:center;justify-content:center;font-weight:700}
-nav{display:flex;flex-direction:column;gap:8px}
-nav a{color:rgba(255,255,255,0.85);text-decoration:none;padding:10px;border-radius:8px}
-nav a.active, nav a:hover{background:rgba(255,255,255,0.06)}
-.sidebar-footer{margin-top:auto;font-size:13px;opacity:0.8}
 
+header h1 {
+  font-size: 28px;
+  color: #2c3e50;
+  margin-bottom: 30px;
+}
 
-.main{flex:1;display:flex;flex-direction:column}
-.topbar{height:64px;background:linear-gradient(90deg,var(--sidebar),#0f3354);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
-.content{padding:20px;display:flex;flex-direction:column;gap:16px}
-.grid-top{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.card{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 8px 20px rgba(0,0,0,0.06)}
-.card.small{display:flex;flex-direction:column;align-items:flex-start}
-.card small{color:var(--muted)}
-.big{font-size:20px;font-weight:700;margin-top:8px}
-.grid-charts{display:grid;grid-template-columns:2fr 1fr;gap:12px}
-.table{width:100%}
-table{width:100%;border-collapse:collapse}
-th,td{padding:10px;border-bottom:1px solid #f0f0f0}
-.controls{display:flex;gap:8px}
-.btn{background:var(--primary);color:#fff;padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
-.btn.ghost{background:transparent;color:var(--primary);border:1px solid #e5eefc}
-.footer{padding:12px;text-align:center;color:var(--muted)}
+.form-section,
+.grafico,
+.tabela,
+.indicador {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+}
 
+.form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
 
-@media(max-width:900px){.grid-top{grid-template-columns:1fr 1fr}.grid-charts{grid-template-columns:1fr}}
-@media(max-width:600px){.grid-top{grid-template-columns:1fr}.sidebar{display:none}}
+.form input,
+.form select {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+button {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #2980b9;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+td button {
+  background: #e74c3c;
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+td button:hover {
+  background: #c0392b;
+}
+
+/* Indicadores */
+.indicadores {
+  display: flex;
+  gap: 20px;
+}
+
+.barra-progresso {
+  background: #eee;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 20px;
+  margin-top: 10px;
+}
+
+.preenchimento {
+  background: #2c3e50;
+  height: 100%;
+  width: 0%;
+  transition: width 0.5s ease;
+}
+
+/* Gráficos lado a lado */
+.graficos-container {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.grafico {
+  flex: 1;
+  min-width: 400px;
+}
+
+/* Listas */
+#listaDespesas,
+#listaMesesRemover {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#listaDespesas li,
+#listaMesesRemover li {
+  padding: 5px 10px;
+  background: #f0f0f0;
+  margin-bottom: 5px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#listaDespesas li button,
+#listaMesesRemover li button {
+  background: #e74c3c;
+  padding: 3px 6px;
+  font-size: 12px;
+  border-radius: 4px;
+}

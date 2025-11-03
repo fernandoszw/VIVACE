@@ -1,10 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Vivace.Context;
 using Vivace.DTOs;
+using Vivace.Models;
 
 namespace Vivace.Service
 {
@@ -17,71 +14,113 @@ namespace Vivace.Service
             _context = context;
         }
 
-        public async Task<DashBoardResumoDto> ObterResumoAsync()
+        public async Task<List<DashBoardResumoDto>> ObterTodosMesesAsync()
         {
-            var hoje = DateTime.Now;
-            var mesAtual = hoje.Month;
-            var anoAtual = hoje.Year;
+            var receitas = await _context.Receitas.OrderBy(r => r.Ano).ThenBy(r => r.Mes).ToListAsync();
+            var resumo = new List<DashBoardResumoDto>();
 
-            var receitaMensal = await _context.Receitas
-                .Where(r => r.Data.Month == mesAtual && r.Data.Year == anoAtual)
-                .SumAsync(r => (decimal?)r.Valor) ?? 0;
-
-            var despesaMensal = await _context.Despesas
-                .Where(d => d.Data.Month == mesAtual && d.Data.Year == anoAtual)
-                .SumAsync(d => (decimal?)d.Valor) ?? 0;
-
-            var totalUnidades = await _context.Unidades.CountAsync();
-            var inadimplentes = await _context.Pagamentos
-                .CountAsync(p => !p.Pago && p.DataVencimento < hoje);
-
-            var taxaCobranca = totalUnidades == 0 ? 0 :
-                (1 - ((double)inadimplentes / totalUnidades)) * 100;
-
-            return new DashBoardResumoDto
+            foreach (var r in receitas)
             {
-                ReceitaMensal = receitaMensal,
-                DespesaMensal = despesaMensal,
-                TaxaCobranca = (decimal)Math.Round(taxaCobranca, 2),
-                UnidadesInadimplentes = inadimplentes
-            };
+                var mesNumero = DateTime.ParseExact(r.Mes, "MMMM", null).Month;
+
+                var despesas = await _context.Despesas
+                    .Where(d => d.Ano == r.Ano && d.MesNumero == mesNumero)
+                    .Select(d => new DespesaDto { Nome = d.Nome, Valor = d.Valor, Mes = r.Mes, Ano = r.Ano })
+                    .ToListAsync();
+
+                resumo.Add(new DashBoardResumoDto
+                {
+                    Mes = r.Mes,
+                    Ano = r.Ano,
+                    Receita = r.Valor,
+                    Despesa = despesas.Sum(d => d.Valor),
+                    Despesas = despesas,
+                    Taxa = 0
+                });
+            }
+
+            return resumo;
         }
 
-        public async Task<List<EvolucaoFinanceiraDto>> ObterEvolucaoFinanceiraAsync()
+        public async Task<DashBoardResumoDto> AdicionarMesAsync(DashBoardResumoDto mes)
         {
-            var ultimos6Meses = DateTime.Now.AddMonths(-5);
+            var mesNumero = DateTime.ParseExact(mes.Mes, "MMMM", null).Month;
+
+            var receita = new Receita
+            {
+                Mes = mes.Mes,
+                Ano = mes.Ano,
+                Valor = mes.Receita
+            };
+            _context.Receitas.Add(receita);
+
+            if (mes.Despesas != null)
+            {
+                foreach (var d in mes.Despesas)
+                {
+                    _context.Despesas.Add(new Despesa
+                    {
+                        Nome = d.Nome,
+                        MesNumero = mesNumero,
+                        Ano = mes.Ano,
+                        Valor = d.Valor
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return mes;
+        }
+
+        public async Task RemoverMesAsync(string mes, int ano)
+        {
+            var mesNumero = DateTime.ParseExact(mes, "MMMM", null).Month;
 
             var receitas = await _context.Receitas
-                .Where(r => r.Data >= ultimos6Meses)
-                .GroupBy(r => new { r.Data.Year, r.Data.Month })
-                .Select(g => new
-                {
-                    Mes = $"{g.Key.Month}/{g.Key.Year}",
-                    Receita = g.Sum(r => r.Valor)
-                })
+                .Where(r => r.Ano == ano && DateTime.ParseExact(r.Mes, "MMMM", null).Month == mesNumero)
                 .ToListAsync();
+            _context.Receitas.RemoveRange(receitas);
 
             var despesas = await _context.Despesas
-                .Where(d => d.Data >= ultimos6Meses)
-                .GroupBy(d => new { d.Data.Year, d.Data.Month })
-                .Select(g => new
+                .Where(d => d.Ano == ano && d.MesNumero == mesNumero)
+                .ToListAsync();
+            _context.Despesas.RemoveRange(despesas);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<DespesaDto>> ObterDespesasPorMesAsync(string mes, int ano)
+        {
+            var mesNumero = DateTime.ParseExact(mes, "MMMM", null).Month;
+
+            var despesas = await _context.Despesas
+                .Where(d => d.Ano == ano && d.MesNumero == mesNumero)
+                .Select(d => new DespesaDto
                 {
-                    Mes = $"{g.Key.Month}/{g.Key.Year}",
-                    Despesa = g.Sum(d => d.Valor)
+                    Nome = d.Nome,
+                    Valor = d.Valor,
+                    Mes = mes,
+                    Ano = ano
                 })
                 .ToListAsync();
 
-            var resultado = (from r in receitas
-                             join d in despesas on r.Mes equals d.Mes into gj
-                             from desp in gj.DefaultIfEmpty()
-                             select new EvolucaoFinanceiraDto
-                             {
-                                 Mes = r.Mes,
-                                 Receita = r.Receita,
-                                 Despesa = desp?.Despesa ?? 0
-                             }).ToList();
+            return despesas;
+        }
 
-            return resultado;
+        public async Task AdicionarDespesaAsync(string mes, int ano, DespesaDto despesa)
+        {
+            var mesNumero = DateTime.ParseExact(mes, "MMMM", null).Month;
+
+            var novaDespesa = new Despesa
+            {
+                Nome = despesa.Nome,
+                Valor = despesa.Valor,
+                MesNumero = mesNumero,
+                Ano = ano
+            };
+
+            _context.Despesas.Add(novaDespesa);
+            await _context.SaveChangesAsync();
         }
     }
 }

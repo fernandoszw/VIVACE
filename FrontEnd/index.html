@@ -1,90 +1,113 @@
-<!doctype html>
-<html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Vivace — Painel</title>
-  <link rel="stylesheet" href="/FrontEnd/style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vivace | Visão Geral Financeira</title>
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="logo">V</div>
-        <div class="name">Vivace</div>
+  <header>
+    <h1>Visão Geral Financeira</h1>
+  </header>
+
+  <main>
+    <!-- Formulário -->
+    <section class="form-section">
+      <h3>Adicionar Mês</h3>
+      <div class="form">
+        <select id="mesInput">
+          <option value="">Selecione o Mês</option>
+          <option value="Janeiro">Janeiro</option>
+          <option value="Fevereiro">Fevereiro</option>
+          <option value="Março">Março</option>
+          <option value="Abril">Abril</option>
+          <option value="Maio">Maio</option>
+          <option value="Junho">Junho</option>
+          <option value="Julho">Julho</option>
+          <option value="Agosto">Agosto</option>
+          <option value="Setembro">Setembro</option>
+          <option value="Outubro">Outubro</option>
+          <option value="Novembro">Novembro</option>
+          <option value="Dezembro">Dezembro</option>
+        </select>
+
+        <select id="anoInput">
+          <option value="">Selecione o Ano</option>
+          <option value="2023">2023</option>
+          <option value="2024">2024</option>
+          <option value="2025">2025</option>
+          <option value="2026">2026</option>
+          <option value="2027">2027</option>
+        </select>
+
+        <input type="number" id="receitaInput" placeholder="Receita (R$)" />
+        <input type="number" id="despesaInput" placeholder="Despesa Total (R$)" />
+        <input type="number" id="taxaInput" placeholder="Taxa de Cobrança (%)" />
+        <button id="addMesBtn">Adicionar Mês</button>
       </div>
-      <nav>
-        <a class="active" href="#">Visão Geral</a>
-        <a href="#">Financeiro</a>
-        <a href="#">Reservas</a>
-        <a href="#">Documentos</a>
-        <a href="#">Configurações</a>
-      </nav>
-      <div class="sidebar-footer">v1.0</div>
-    </aside>
+    </section>
 
-    <div class="main">
-      <header class="topbar">
-        <div class="left">Painel — Vivace</div>
-        <div class="right">
-          <div class="api-config">API: <span id="apiUrlDisplay">http://localhost:5202/api</span></div>
-          <div class="user">Gabriel</div>
+    <!-- Indicadores -->
+    <section class="indicadores">
+      <div class="indicador">
+        <h3>Taxa de Cobrança</h3>
+        <div class="barra-progresso">
+          <div id="barraTaxa" class="preenchimento"></div>
         </div>
-      </header>
+        <span id="percentualTaxa">0%</span>
+      </div>
 
-      <main class="content">
-        <section class="grid-top">
-          <div class="card small" id="card-receita"><small>Receita Mensal</small><div class="big" id="receitaCard">R$ 0,00</div></div>
-          <div class="card small" id="card-despesa"><small>Despesa Mensal</small><div class="big" id="despesaCard">R$ 0,00</div></div>
-          <div class="card small" id="card-inad"><small>Inadimplentes</small><div class="big" id="inadimplentesCard">0</div></div>
-          <div class="card small" id="card-taxa"><small>Taxa de Cobrança</small><div class="big" id="taxaCard">0%</div></div>
-        </section>
+      <div class="indicador">
+        <h3>Inadimplentes</h3>
+        <span id="inadimplentes">0 unidades</span>
+        <span id="percentualInadimplentes">0% do total</span>
+      </div>
+    </section>
 
-        <section class="grid-charts">
-          <div class="card">
-            <h3>Evolução (Receita vs Despesa)</h3>
-            <canvas id="chartEvolucao"></canvas>
-          </div>
+    <!-- Gráficos lado a lado -->
+    <section class="graficos-container">
+      <!-- Evolução Financeira -->
+      <div class="grafico">
+        <h3>Evolução Financeira — Receita x Despesa</h3>
+        <canvas id="graficoEvolucao"></canvas>
 
-          <div class="card">
-            <h3>Distribuição</h3>
-            <canvas id="chartPizza"></canvas>
-          </div>
-        </section>
+        <h4>Meses adicionados:</h4>
+        <ul id="listaMesesRemover"></ul>
+      </div>
 
-        <section class="card">
-          <h3>Receitas recentes</h3>
-          <table id="tabelaReceitas">
-            <thead><tr><th>ID</th><th>Descrição</th><th>Valor</th><th>Data</th></tr></thead>
-            <tbody><tr><td colspan="4">Carregando...</td></tr></tbody>
-          </table>
-        </section>
+      <!-- Distribuição de Despesas -->
+      <div class="grafico">
+        <h3>Distribuição de Despesas — <span id="mesAnoUltimoMes">Nenhum mês adicionado</span></h3>
+        <div class="form">
+          <input type="text" id="nomeDespesaInput" placeholder="Nome da despesa" />
+          <input type="number" id="valorDespesaInput" placeholder="Valor (R$)" />
+          <button id="addDespesaBtn">Adicionar Despesa</button>
+        </div>
+        <ul id="listaDespesas"></ul>
+        <canvas id="graficoDespesas"></canvas>
+      </div>
+    </section>
 
-        <section class="card">
-          <h3>Relatórios</h3>
-          <div class="controls">
-            <button id="btnExportInadimplencia" class="btn ghost">Exportar Inadimplência (Excel)</button>
-            <button id="btnGerarBalancete" class="btn">Gerar Balancete (PDF)</button>
-          </div>
-        </section>
-      </main>
+    <!-- Tabela -->
+    <section class="tabela">
+      <h3>Meses Adicionados</h3>
+      <table id="tabelaMeses">
+        <thead>
+          <tr>
+            <th>Mês/Ano</th>
+            <th>Receita (R$)</th>
+            <th>Despesa (R$)</th>
+            <th>Taxa (%)</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
 
-      <footer class="footer">© Vivace</footer>
-    </div>
-  </div>
-
-  <!-- Modal Pix -->
-  <div id="pixModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);justify-content:center;align-items:center;">
-    <div style="background:#fff;padding:20px;border-radius:12px;position:relative;text-align:center;max-width:300px;">
-      <span id="closeModal" style="position:absolute;top:5px;right:10px;cursor:pointer;font-weight:bold;">X</span>
-      <h3>Pagamento Pix</h3>
-      <div id="qrcode"></div>
-      <p id="pixInfo" style="white-space:pre-line;"></p>
-    </div>
-  </div>
-
-  <script src="/FrontEnd/script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

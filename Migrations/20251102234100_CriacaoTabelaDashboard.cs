@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Vivace.Migrations
 {
     /// <inheritdoc />
-    public partial class CriacaoTabelaDashboardsERelatorios : Migration
+    public partial class CriacaoTabelaDashboard : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,10 +17,10 @@ namespace Vivace.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Categoria = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Data = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MesNumero = table.Column<int>(type: "int", nullable: false),
+                    Ano = table.Column<int>(type: "int", nullable: false),
+                    Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -46,9 +46,9 @@ namespace Vivace.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Data = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Mes = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Ano = table.Column<int>(type: "int", nullable: false),
+                    Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -61,7 +61,7 @@ namespace Vivace.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Numero = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MoradorId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -81,10 +81,10 @@ namespace Vivace.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UnidadeId = table.Column<int>(type: "int", nullable: false),
                     Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Pago = table.Column<bool>(type: "bit", nullable: false),
                     DataVencimento = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Pago = table.Column<bool>(type: "bit", nullable: false)
+                    UnidadeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

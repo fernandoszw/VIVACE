@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Vivace.DTOs;
+using VIVACE.DTOs;
 
 namespace Vivace.Service
 {

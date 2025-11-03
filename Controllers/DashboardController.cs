@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Vivace.DTOs;
 using Vivace.Service;
 
 namespace Vivace.Controllers
@@ -14,18 +15,39 @@ namespace Vivace.Controllers
             _dashboardService = dashboardService;
         }
 
-        [HttpGet("resumo")]
+        [HttpGet("todos")]
         public async Task<IActionResult> GetResumo()
         {
-            var resumo = await _dashboardService.ObterResumoAsync();
+            var resumo = await _dashboardService.ObterTodosMesesAsync();
             return Ok(resumo);
         }
 
-        [HttpGet("evolucao")]
-        public async Task<IActionResult> GetEvolucao()
+        [HttpPost("adicionar-mes")]
+        public async Task<IActionResult> AdicionarMes([FromBody] DashBoardResumoDto mes)
         {
-            var evolucao = await _dashboardService.ObterEvolucaoFinanceiraAsync();
-            return Ok(evolucao);
+            var resultado = await _dashboardService.AdicionarMesAsync(mes);
+            return Ok(resultado);
+        }
+
+        [HttpDelete("remover-mes")]
+        public async Task<IActionResult> RemoverMes([FromQuery] string mes, [FromQuery] int ano)
+        {
+            await _dashboardService.RemoverMesAsync(mes, ano);
+            return NoContent();
+        }
+
+        [HttpGet("despesas")]
+        public async Task<IActionResult> ObterDespesas([FromQuery] string mes, [FromQuery] int ano)
+        {
+            var despesas = await _dashboardService.ObterDespesasPorMesAsync(mes, ano);
+            return Ok(despesas);
+        }
+
+        [HttpPost("adicionar-despesa")]
+        public async Task<IActionResult> AdicionarDespesa([FromQuery] string mes, [FromQuery] int ano, [FromBody] DespesaDto despesaDto)
+        {
+            await _dashboardService.AdicionarDespesaAsync(mes, ano, despesaDto);
+            return Ok(despesaDto);
         }
     }
 }

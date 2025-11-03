@@ -12,8 +12,8 @@ using Vivace.Context;
 namespace Vivace.Migrations
 {
     [DbContext(typeof(FinancasContext))]
-    [Migration("20251031185724_ListaDashBoardEReceitas")]
-    partial class ListaDashBoardEReceitas
+    [Migration("20251102234100_CriacaoTabelaDashboard")]
+    partial class CriacaoTabelaDashboard
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,14 +33,13 @@ namespace Vivace.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Categoria")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Ano")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("Data")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("MesNumero")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Descricao")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -104,10 +103,10 @@ namespace Vivace.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Data")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("Ano")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Descricao")
+                    b.Property<string>("Mes")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -130,7 +129,7 @@ namespace Vivace.Migrations
                     b.Property<int>("MoradorId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Numero")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

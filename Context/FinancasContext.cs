@@ -17,6 +17,7 @@ namespace Vivace.Context
         public DbSet<Morador> Moradores { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

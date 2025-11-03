@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Vivace.DTOs
+namespace VIVACE.DTOs
 {
     public class InadimplenciaDto
     {
-        public string Unidade { get; set; }
-        public string Morador { get; set; }
+        public string Unidade { get; set; } = default!;
+        public string Morador { get; set; } = default!;
         public decimal Valor { get; set; }
         public int DiasAtraso { get; set; }
     }
+
 }

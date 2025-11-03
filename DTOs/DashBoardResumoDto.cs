@@ -1,15 +1,14 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Vivace.DTOs
 {
     public class DashBoardResumoDto
     {
-        public decimal ReceitaMensal { get; set; }
-        public decimal DespesaMensal { get; set; }
-        public decimal TaxaCobranca { get; set; }
-        public int UnidadesInadimplentes { get; set; }
+        public string Mes { get; set; } = string.Empty;
+        public int Ano { get; set; }
+        public decimal Receita { get; set; }
+        public decimal Despesa { get; set; }
+        public decimal Taxa { get; set; }
+        public List<DespesaDto> Despesas { get; set; } = new();
     }
 }

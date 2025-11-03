@@ -1,6 +1,6 @@
 namespace Vivace.DTOs
 {
-    public class DespesaCategoriaDto
+    public class DespesaDto
     {
         public string Nome { get; set; } = string.Empty;
         public decimal Valor { get; set; }

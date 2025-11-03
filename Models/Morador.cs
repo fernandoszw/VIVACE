@@ -6,7 +6,6 @@ namespace Vivace.Models
     {
         public int Id { get; set; }
         public string Nome { get; set; }
-
-        public ICollection<Unidade> Unidades { get; set; }
+        public List<Unidade> Unidades { get; set; } = new();
     }
 }

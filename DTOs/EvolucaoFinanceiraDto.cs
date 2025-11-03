@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Vivace.DTOs
+namespace VIVACE.DTOs
 {
-    public class EvolucaoFinanceiraDto
-    {
-        public string Mes { get; set; }
-        public decimal Receita { get; set; }
-        public decimal Despesa { get; set; }
-    }
+public class EvolucaoFinanceiraDto
+{
+    public string Mes { get; set; } = default!;
+    public decimal Receita { get; set; }
+    public decimal Despesa { get; set; }
+}
 }
