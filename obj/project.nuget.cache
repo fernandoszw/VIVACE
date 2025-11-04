@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "VDAZOGEKbVI=",
+  "dgSpecHash": "NChotEhaF0Y=",
   "success": true,
-  "projectFilePath": "C:\\Users\\429434624\\Documents\\Vivace\\VIVACE\\Vivace.csproj",
+  "projectFilePath": "C:\\Users\\429434624\\Documents\\VIVACE\\VIVACE\\Vivace.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\429434624\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\429434624\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

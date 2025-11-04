@@ -15,11 +15,12 @@ namespace Vivace.Context
         {
             base.OnModelCreating(modelBuilder);
 
+            // 🔹 Configuração do relacionamento
             modelBuilder.Entity<Despesa>()
                 .HasOne(d => d.Dashboard)
                 .WithMany(dash => dash.Despesas)
                 .HasForeignKey(d => d.DashboardId)
-                .OnDelete(DeleteBehavior.Cascade); // Remove despesas ao deletar Dashboard
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

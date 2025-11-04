@@ -5,7 +5,7 @@
 namespace Vivace.Migrations
 {
     /// <inheritdoc />
-    public partial class ListaDashBoardEReceitas : Migration
+    public partial class ListaDashBoardEReceita : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

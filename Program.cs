@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Vivace.Context;
+using Vivace.Interfaces;
 using Vivace.Service;
 
 var builder = WebApplication.CreateBuilder(args);

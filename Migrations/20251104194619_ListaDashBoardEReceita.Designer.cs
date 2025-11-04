@@ -11,8 +11,8 @@ using Vivace.Context;
 namespace Vivace.Migrations
 {
     [DbContext(typeof(FinancasContext))]
-    [Migration("20251103185458_ListaDashBoardEReceitas")]
-    partial class ListaDashBoardEReceitas
+    [Migration("20251104194619_ListaDashBoardEReceita")]
+    partial class ListaDashBoardEReceita
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

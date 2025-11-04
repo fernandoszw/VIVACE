@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\429434624\\Documents\\Vivace\\VIVACE\\Vivace.csproj": {}
+    "C:\\Users\\429434624\\Documents\\VIVACE\\VIVACE\\Vivace.csproj": {}
   },
   "projects": {
-    "C:\\Users\\429434624\\Documents\\Vivace\\VIVACE\\Vivace.csproj": {
+    "C:\\Users\\429434624\\Documents\\VIVACE\\VIVACE\\Vivace.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\429434624\\Documents\\Vivace\\VIVACE\\Vivace.csproj",
+        "projectUniqueName": "C:\\Users\\429434624\\Documents\\VIVACE\\VIVACE\\Vivace.csproj",
         "projectName": "Vivace",
-        "projectPath": "C:\\Users\\429434624\\Documents\\Vivace\\VIVACE\\Vivace.csproj",
+        "projectPath": "C:\\Users\\429434624\\Documents\\VIVACE\\VIVACE\\Vivace.csproj",
         "packagesPath": "C:\\Users\\429434624\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\429434624\\Documents\\Vivace\\VIVACE\\obj\\",
+        "outputPath": "C:\\Users\\429434624\\Documents\\VIVACE\\VIVACE\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\429434624\\AppData\\Roaming\\NuGet\\NuGet.Config"

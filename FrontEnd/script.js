@@ -150,27 +150,43 @@ function atualizarGraficos() {
 function atualizarGraficoDespesas() {
     const ctx = document.getElementById("graficoDespesas").getContext("2d");
     const mesAtual = dadosMensais[dadosMensais.length - 1];
-    if (!mesAtual) return;
+    const titulo = document.getElementById("mesAnoUltimoMes");
+
+    // Caso não tenha mês nenhum
+    if (!mesAtual) {
+        titulo.innerText = "Distribuição de Despesas — Nenhum mês adicionado";
+        if (graficoDespesas) graficoDespesas.destroy();
+        return;
+    }
+
+    // Atualiza o título com o último mês, mesmo que sem despesas
+    titulo.innerText = `Distribuição de Despesas — ${mesAtual.mes}/${mesAtual.ano}`;
 
     const nomes = mesAtual.despesas.map(d => d.nome);
     const valores = mesAtual.despesas.map(d => d.valor);
 
     if (graficoDespesas) graficoDespesas.destroy();
+
+    // Se ainda não há despesas, não exibe gráfico, mas mantém o título
     if (nomes.length === 0) return;
 
     graficoDespesas = new Chart(ctx, {
         type: "pie",
-        data: { 
-            labels: nomes, 
-            datasets: [{ 
-                data: valores, 
-                backgroundColor: ["#3498db","#9b59b6","#1abc9c","#e67e22","#e74c3c","#2ecc71","#f1c40f"] 
-            }] 
+        data: {
+            labels: nomes,
+            datasets: [{
+                data: valores,
+                backgroundColor: [
+                    "#3498db", "#9b59b6", "#1abc9c", "#e67e22",
+                    "#e74c3c", "#2ecc71", "#f1c40f"
+                ]
+            }]
         },
-        options: { responsive: true, plugins: { legend: { position: "bottom" } } }
+        options: {
+            responsive: true,
+            plugins: { legend: { position: "bottom" } }
+        }
     });
-
-    document.getElementById("mesAnoUltimoMes").innerText = `${mesAtual.mes}/${mesAtual.ano}`;
 }
 
 // Atualizar tabela
