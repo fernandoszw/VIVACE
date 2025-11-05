@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vivace – Painel do Administrador</title>
+  <link rel="stylesheet" href="../css/dashboard.css" />
+</head>
+
+<body>
+  <header class="navbar">
+    <div class="logo-area">
+      <img src="../../images/Logo Minimalista com Casa e _V_.png" class="logo-small" alt="Logo Vivace">
+      <span class="brand">Vivace Admin</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#" class="active" data-section="moradores">Moradores</a></li>
+        <li><a href="#" data-section="veiculos">Veículos</a></li>
+        <li><a href="#" data-section="animais">Animais</a></li>
+      </ul>
+    </nav>
+    <button id="logoutBtn" class="logout">Sair</button>
+  </header>
+
+  <main>
+    <!-- ====== MORADORES ====== -->
+    <section id="moradores" class="content-section active">
+      <h2>Moradores Cadastrados</h2>
+      <div id="listaMoradores" class="data-list admin-list"></div>
+    </section>
+
+    <!-- ====== VEÍCULOS ====== -->
+    <section id="veiculos" class="content-section">
+      <h2>Todos os Veículos</h2>
+      <div id="listaVeiculos" class="data-list admin-list"></div>
+    </section>
+
+    <!-- ====== ANIMAIS ====== -->
+    <section id="animais" class="content-section">
+      <h2>Todos os Animais</h2>
+      <div id="listaAnimais" class="data-list admin-list"></div>
+    </section>
+  </main>
+
+  <script type="module" src="../js/admin-dashboard.js"></script>
+</body>
+
+</html>
