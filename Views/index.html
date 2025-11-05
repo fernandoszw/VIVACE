@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vivace - Login</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+  <div class="card">
+    <div class="logo-container">
+      <img src="../images/Logo Vivace Gestão Condominial.png" alt="Vivace Logo" class="logo-icon">
+    </div>
+
+    <form id="login-form">
+      <label for="email">Usuário / Email</label>
+      <input type="text" id="email" placeholder="Digite seu usuário ou email" required>
+
+      <label for="password">Senha</label>
+      <input type="password" id="password" placeholder="Digite sua senha" required>
+
+      <div id="errorMessage" class="error" style="display: none;">
+        Usuário ou senha incorretos.
+      </div>
+
+      <button type="submit" id="login-btn">Entrar</button>
+    </form>
+
+    <div class="helper">
+      <a href="./html/reset.html" id="forgot-password">Esqueceu a senha?</a>
+    </div>
+
+    <hr />
+
+    <button id="signup-btn" class="create-btn">Criar nova conta</button>
+
+    <div id="message" role="status" aria-live="polite"></div>
+  </div>
+
+  <script type="module" src="./js/login.js"></script>
+</body>
+
+</html>
