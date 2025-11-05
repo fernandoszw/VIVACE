@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nova Senha – Spotify</title>
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="login-box">
+      <h2 class="logo">Spotify</h2>
+      <h3 class="reset-title">Definir nova senha</h3>
+
+      <input type="password" id="novaSenha" placeholder="Nova senha" required />
+      <input type="password" id="confirmarSenha" placeholder="Confirmar senha" required />
+      <button id="salvarBtn" class="login-btn">Salvar nova senha</button>
+
+      <p id="message-reset" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDFXZblMDJqjNdw84x0EOtUDQ6CUrTk9B8",
+      authDomain: "loginvivace.firebaseapp.com",
+      databaseURL: "https://loginvivace-default-rtdb.firebaseio.com",
+      projectId: "loginvivace",
+      storageBucket: "loginvivace.firebasestorage.app",
+      messagingSenderId: "900481651159",
+      appId: "1:900481651159:web:b47dcbbcd68d023e8afb92",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get("email");
+    const userKey = email.replace(/\./g, "_");
+
+    const novaSenha = document.getElementById("novaSenha");
+    const confirmarSenha = document.getElementById("confirmarSenha");
+    const salvarBtn = document.getElementById("salvarBtn");
+    const msg = document.getElementById("message-reset");
+
+    function setMessage(text, isError = true) {
+      msg.textContent = text;
+      msg.style.color = isError ? "#b00020" : "#1DB954";
+    }
+
+    salvarBtn.addEventListener("click", async () => {
+      const senha1 = novaSenha.value.trim();
+      const senha2 = confirmarSenha.value.trim();
+
+      if (!senha1 || !senha2) return setMessage("Preencha os dois campos.");
+      if (senha1 !== senha2) return setMessage("As senhas não coincidem.");
+      if (senha1.length < 6) return setMessage("A senha deve ter pelo menos 6 caracteres.");
+
+      try {
+        await update(ref(db, `users/${userKey}`), {
+          password: senha1,
+          updatedAt: new Date().toISOString(),
+        });
+        setMessage("Senha alterada com sucesso!", false);
+        setTimeout(() => window.location.href = "login.html", 1500);
+      } catch (err) {
+        console.error(err);
+        setMessage("Erro ao alterar senha. Veja o console.");
+      }
+    });
+  </script>
+</body>
+</html>

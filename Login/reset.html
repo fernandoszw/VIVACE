@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redefinir Senha</title>
+  <link rel="stylesheet" href="reset.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="login-box">
+      <h3 class="reset-title">Redefinir senha</h3>
+      <p class="reset-subtitle">
+        Digite seu e-mail para receber um link de redefinição.
+      </p>
+
+      <input type="email" id="email-reset" placeholder="Email" required />
+      <button id="send-reset" class="login-btn">Enviar link</button>
+
+      <p id="message-reset" role="status" aria-live="polite"></p>
+
+      <hr />
+      <a href="login.html" class="back-link">⬅ Voltar para login</a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import {
+      getDatabase,
+      ref,
+      get,
+      child
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+    import emailjs from "https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js";
+
+    // 🔥 Config Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDFXZblMDJqjNdw84x0EOtUDQ6CUrTk9B8",
+      authDomain: "loginvivace.firebaseapp.com",
+      databaseURL: "https://loginvivace-default-rtdb.firebaseio.com",
+      projectId: "loginvivace",
+      storageBucket: "loginvivace.firebasestorage.app",
+      messagingSenderId: "900481651159",
+      appId: "1:900481651159:web:b47dcbbcd68d023e8afb92",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Inicializa EmailJS
+    emailjs.init("F6rYIXtr5aEORGa6D"); // substitua pela sua chave pública
+
+    const emailInput = document.getElementById("email-reset");
+    const sendBtn = document.getElementById("send-reset");
+    const msg = document.getElementById("message-reset");
+
+    function setMessage(text, isError = true) {
+      msg.textContent = text;
+      msg.style.color = isError ? "#b00020" : "#1DB954";
+    }
+
+    sendBtn.addEventListener("click", async () => {
+      const email = emailInput.value.trim();
+      if (!email) return setMessage("Digite seu e-mail.");
+
+      const userKey = email.replace(/\./g, "_");
+      sendBtn.disabled = true;
+
+      try {
+        const snapshot = await get(child(ref(db), `users/${userKey}`));
+
+        if (!snapshot.exists()) {
+          return setMessage("Usuário não encontrado.");
+        }
+
+        // Gera o link de redefinição
+        const reset_link = `https://seusite.com/nova-senha.html?email=${encodeURIComponent(email)}`;
+
+        // Envia e-mail com o link
+        await emailjs.send("service_at554lp", "template_w7oxnfj", {
+          to_email: email,
+          reset_link: reset_link,
+        });
+
+        setMessage("Link de redefinição enviado para seu e-mail!", false);
+      } catch (err) {
+        console.error(err);
+        setMessage("Erro ao enviar e-mail. Veja o console.");
+      } finally {
+        sendBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

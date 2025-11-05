@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vivace – Gestão Condominial</title>
+  <link rel="stylesheet" href="dashboard.css" />
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getDatabase, ref, set, push, onValue } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+
+    // 🔥 Config Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDFXZblMDJqjNdw84x0EOtUDQ6CUrTk9B8",
+      authDomain: "loginvivace.firebaseapp.com",
+      databaseURL: "https://loginvivace-default-rtdb.firebaseio.com",
+      projectId: "loginvivace",
+      storageBucket: "loginvivace.firebasestorage.app",
+      messagingSenderId: "900481651159",
+      appId: "1:900481651159:web:b47dcbbcd68d023e8afb92"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const usuarioLogado = localStorage.getItem("usuarioLogado");
+      if (!usuarioLogado) window.location.href = "../login.html";
+
+      // Alterna seções
+      const navLinks = document.querySelectorAll("nav a");
+      const sections = document.querySelectorAll(".content-section");
+      navLinks.forEach(link => {
+        link.addEventListener("click", () => {
+          navLinks.forEach(l => l.classList.remove("active"));
+          link.classList.add("active");
+          sections.forEach(s => s.classList.remove("active"));
+          document.getElementById(link.dataset.section).classList.add("active");
+        });
+      });
+
+      // 🟢 Morador
+      document.getElementById("moradorForm").addEventListener("submit", async e => {
+        e.preventDefault();
+        const dados = {
+          nome: nome.value,
+          bloco: bloco.value,
+          apartamento: apartamento.value,
+          telefone: telefone.value,
+          email: email.value
+        };
+        await set(ref(db, `usuarios/${usuarioLogado.replace(/\./g, "_")}/dados`), dados);
+        alert("✅ Dados do morador salvos com sucesso!");
+      });
+
+      // 🟡 Veículos
+      const listaCarros = document.getElementById("listaCarros");
+      carroForm.addEventListener("submit", async e => {
+        e.preventDefault();
+        const carro = {
+          modelo: modelo.value,
+          placa: placa.value,
+          cor: cor.value,
+          createdAt: new Date().toISOString()
+        };
+        await push(ref(db, `usuarios/${usuarioLogado.replace(/\./g, "_")}/carros`), carro);
+        carroForm.reset();
+      });
+      onValue(ref(db, `usuarios/${usuarioLogado.replace(/\./g, "_")}/carros`), snap => {
+        listaCarros.innerHTML = "";
+        if (snap.exists()) snap.forEach(c => {
+          const v = c.val();
+          listaCarros.innerHTML += `<div class='item-card'><strong>${v.modelo}</strong> - ${v.placa} (${v.cor})</div>`;
+        });
+      });
+
+      // 🟠 Animais
+      const listaAnimais = document.getElementById("listaAnimais");
+      animalForm.addEventListener("submit", async e => {
+        e.preventDefault();
+        const animal = {
+          nome: nomeAnimal.value,
+          especie: especie.value,
+          raca: raca.value,
+          createdAt: new Date().toISOString()
+        };
+        await push(ref(db, `usuarios/${usuarioLogado.replace(/\./g, "_")}/animais`), animal);
+        animalForm.reset();
+      });
+      onValue(ref(db, `usuarios/${usuarioLogado.replace(/\./g, "_")}/animais`), snap => {
+        listaAnimais.innerHTML = "";
+        if (snap.exists()) snap.forEach(a => {
+          const v = a.val();
+          listaAnimais.innerHTML += `<div class='item-card'><strong>${v.nome}</strong> - ${v.especie} (${v.raca || "Sem raça"})</div>`;
+        });
+      });
+
+      // 🔴 Logout corrigido
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        localStorage.removeItem("usuarioLogado");
+        window.location.href = "../login.html";
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <header class="navbar">
+    <div class="logo-area">
+      <img src="/Logo Minimalista com Casa e _V_.png" class="logo-small" alt="Logo Vivace">
+      <span class="brand">Vivace</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#" class="active" data-section="morador">Meus Dados</a></li>
+        <li><a href="#" data-section="carros">Meus Veículos</a></li>
+        <li><a href="#" data-section="animais">Meus Animais</a></li>
+      </ul>
+    </nav>
+    <button id="logoutBtn" class="logout">Sair</button>
+  </header>
+
+  <main>
+    <section id="morador" class="content-section active">
+      <h2>Dados do Morador</h2>
+      <form id="moradorForm" class="smart-form">
+        <div class="form-group"><label>Nome Completo</label><input id="nome" required></div>
+        <div class="form-group"><label>Bloco</label><input id="bloco" required></div>
+        <div class="form-group"><label>Apartamento</label><input id="apartamento" required></div>
+        <div class="form-group"><label>Telefone</label><input id="telefone"></div>
+        <div class="form-group"><label>Email</label><input id="email" type="email"></div>
+        <button class="primary-btn">Salvar</button>
+      </form>
+    </section>
+
+    <section id="carros" class="content-section">
+      <h2>Meus Veículos</h2>
+      <form id="carroForm" class="smart-form">
+        <div class="form-group"><label>Modelo</label><input id="modelo" required></div>
+        <div class="form-group"><label>Placa</label><input id="placa" required></div>
+        <div class="form-group"><label>Cor</label><input id="cor" required></div>
+        <button class="primary-btn">Adicionar</button>
+      </form>
+      <div id="listaCarros" class="data-list"></div>
+    </section>
+
+    <section id="animais" class="content-section">
+      <h2>Meus Animais</h2>
+      <form id="animalForm" class="smart-form">
+        <div class="form-group"><label>Nome</label><input id="nomeAnimal" required></div>
+        <div class="form-group"><label>Espécie</label><input id="especie" required></div>
+        <div class="form-group"><label>Raça</label><input id="raca"></div>
+        <button class="primary-btn">Adicionar</button>
+      </form>
+      <div id="listaAnimais" class="data-list"></div>
+    </section>
+  </main>
+</body>
+</html>
