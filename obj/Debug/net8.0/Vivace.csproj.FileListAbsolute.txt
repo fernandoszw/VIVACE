@@ -738,3 +738,4 @@ C:\Users\429434624\Documents\Vivace\VIVACE\obj\Debug\net8.0\refint\Vivace.dll
 C:\Users\429434624\Documents\Vivace\VIVACE\obj\Debug\net8.0\Vivace.pdb
 C:\Users\429434624\Documents\Vivace\VIVACE\obj\Debug\net8.0\Vivace.genruntimeconfig.cache
 C:\Users\429434624\Documents\Vivace\VIVACE\obj\Debug\net8.0\ref\Vivace.dll
+C:\Users\429434624\Documents\VIVACE\VIVACE\bin\Debug\net8.0\QRCoder.dll

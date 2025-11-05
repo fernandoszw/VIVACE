@@ -3,6 +3,22 @@ let dadosMensais = [];
 let graficoEvolucao = null;
 let graficoDespesas = null;
 
+// -------------------- Funções --------------------
+
+// 🔗 Redirecionar para o Financeiro
+document.getElementById("btnFinanceiro").addEventListener("click", () => {
+  window.location.href = "FinanceiroAdmin.html";
+});
+
+// Gera anos automaticamente (2026 a 2035)
+const anoSelect = document.getElementById("anoInput");
+for (let ano = 2026; ano <= 2035; ano++) {
+  const option = document.createElement("option");
+  option.value = ano;
+  option.textContent = ano;
+  anoSelect.appendChild(option);
+}
+
 // Carregar meses do backend
 async function carregarMeses() {
     try {
@@ -10,6 +26,7 @@ async function carregarMeses() {
         if (!res.ok) throw new Error("Erro ao buscar meses");
 
         dadosMensais = await res.json();
+        dadosMensais.sort((a, b) => a.ano - b.ano || a.mesNumero - b.mesNumero);
         atualizarTabela();
         atualizarGraficos();
         atualizarGraficoDespesas();
@@ -21,7 +38,9 @@ async function carregarMeses() {
 
 // Adicionar mês
 async function adicionarMes() {
-    const mes = document.getElementById("mesInput").value;
+    const mesSelect = document.getElementById("mesInput");
+    const mes = mesSelect.value;
+    const mesNumero = parseInt(mesSelect.selectedOptions[0].dataset.num);
     const ano = parseInt(document.getElementById("anoInput").value);
     const receita = parseFloat(document.getElementById("receitaInput").value);
     const despesa = parseFloat(document.getElementById("despesaInput").value);
@@ -31,7 +50,7 @@ async function adicionarMes() {
         return alert("Preencha todos os campos corretamente!");
     }
 
-    const novoMes = { mes, ano, receita, despesa, taxa, despesas: [] };
+    const novoMes = { mes, mesNumero, ano, receita, despesa, taxa, despesas: [] };
 
     try {
         const res = await fetch(`${apiUrl}/adicionar`, {
@@ -41,24 +60,28 @@ async function adicionarMes() {
         });
 
         if (!res.ok) throw new Error('Erro ao adicionar mês');
-
         const data = await res.json();
-        dadosMensais.push(data);
-        atualizarGraficos();
-        atualizarTabela();
-        atualizarGraficoDespesas();
 
+        dadosMensais.push(data);
+        dadosMensais.sort((a, b) => a.ano - b.ano || a.mesNumero - b.mesNumero);
+
+        atualizarTabela();
+        atualizarGraficos();
+        atualizarGraficoDespesas();
+        alert("Mês adicionado com sucesso!");
+
+        mesSelect.value = "";
+        document.getElementById("anoInput").value = "";
         document.getElementById("receitaInput").value = "";
         document.getElementById("despesaInput").value = "";
         document.getElementById("taxaInput").value = "";
-
     } catch (err) {
         console.error(err);
         alert(err.message);
     }
 }
 
-// Adicionar despesa distribuída
+// Adicionar despesa
 async function adicionarDespesa() {
     const mesAtual = dadosMensais[dadosMensais.length - 1];
     if (!mesAtual) return alert("Adicione um mês primeiro!");
@@ -68,19 +91,14 @@ async function adicionarDespesa() {
 
     if (!nome || isNaN(valor)) return alert("Preencha corretamente!");
 
-    // Limite da despesa total
     const somaDespesas = mesAtual.despesas.reduce((acc, d) => acc + d.valor, 0);
-    if (somaDespesas + valor > mesAtual.despesa) {
-        return alert("Não é possível adicionar. Excede a despesa total do mês!");
-    }
-
-    const despesa = { nome, valor };
+    if (somaDespesas + valor > mesAtual.despesa) return alert("Excede a despesa total do mês!");
 
     try {
         const res = await fetch(`${apiUrl}/adicionar-despesa/${mesAtual.id}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(despesa)
+            body: JSON.stringify({ nome, valor })
         });
 
         if (!res.ok) {
@@ -90,11 +108,13 @@ async function adicionarDespesa() {
 
         const data = await res.json();
         mesAtual.despesas.push(data);
+
+        atualizarListaDespesas();
         atualizarGraficoDespesas();
+        alert("Despesa adicionada com sucesso!");
 
         document.getElementById("nomeDespesaInput").value = "";
         document.getElementById("valorDespesaInput").value = "";
-
     } catch (err) {
         alert(err.message);
     }
@@ -110,8 +130,8 @@ async function removerMes(index) {
         if (!res.ok) throw new Error('Erro ao remover mês');
 
         dadosMensais.splice(index, 1);
-        atualizarGraficos();
         atualizarTabela();
+        atualizarGraficos();
         atualizarGraficoDespesas();
     } catch (err) {
         console.error(err);
@@ -119,7 +139,50 @@ async function removerMes(index) {
     }
 }
 
-// Atualizar gráficos
+// Remover despesa individual
+function removerDespesa(indexDespesa) {
+    const mesAtual = dadosMensais[dadosMensais.length - 1];
+    if (!mesAtual) return;
+
+    mesAtual.despesas.splice(indexDespesa, 1);
+    atualizarListaDespesas();
+    atualizarGraficoDespesas();
+}
+
+// Atualizar tabela HTML
+function atualizarTabela() {
+    const tbody = document.querySelector("#tabelaMeses tbody");
+    tbody.innerHTML = "";
+
+    dadosMensais.forEach((m, i) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${m.mes}/${m.ano}</td>
+            <td>R$ ${m.receita.toFixed(2)}</td>
+            <td>R$ ${m.despesa.toFixed(2)}</td>
+            <td>${m.taxa.toFixed(2)}%</td>
+            <td><button onclick="removerMes(${i})">Remover</button></td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+// Atualizar lista de despesas do último mês
+function atualizarListaDespesas() {
+    const ul = document.getElementById("listaDespesas");
+    const mesAtual = dadosMensais[dadosMensais.length - 1];
+    ul.innerHTML = "";
+
+    if (!mesAtual) return;
+
+    mesAtual.despesas.forEach((d, i) => {
+        const li = document.createElement("li");
+        li.innerHTML = `${d.nome} — R$ ${d.valor.toFixed(2)} <button onclick="removerDespesa(${i})">Remover</button>`;
+        ul.appendChild(li);
+    });
+}
+
+// Atualizar gráfico de evolução financeira
 function atualizarGraficos() {
     const ctx = document.getElementById("graficoEvolucao").getContext("2d");
     const meses = dadosMensais.map(x => `${x.mes}/${x.ano}`);
@@ -140,73 +203,47 @@ function atualizarGraficos() {
         options: { responsive: true, plugins: { legend: { position: "bottom" } } }
     });
 
-    // Atualizar barra de taxa de cobrança
     const ultimaTaxa = dadosMensais.length ? dadosMensais[dadosMensais.length - 1].taxa : 0;
     document.getElementById("barraTaxa").style.width = `${ultimaTaxa}%`;
     document.getElementById("percentualTaxa").innerText = `${ultimaTaxa.toFixed(2)}%`;
 }
 
-// Atualizar gráfico de despesas
+// Atualizar gráfico de distribuição de despesas
 function atualizarGraficoDespesas() {
     const ctx = document.getElementById("graficoDespesas").getContext("2d");
     const mesAtual = dadosMensais[dadosMensais.length - 1];
     const titulo = document.getElementById("mesAnoUltimoMes");
 
-    // Caso não tenha mês nenhum
     if (!mesAtual) {
         titulo.innerText = "Distribuição de Despesas — Nenhum mês adicionado";
         if (graficoDespesas) graficoDespesas.destroy();
         return;
     }
 
-    // Atualiza o título com o último mês, mesmo que sem despesas
     titulo.innerText = `Distribuição de Despesas — ${mesAtual.mes}/${mesAtual.ano}`;
 
     const nomes = mesAtual.despesas.map(d => d.nome);
     const valores = mesAtual.despesas.map(d => d.valor);
+    const cores = mesAtual.despesas.map(() => gerarCorAleatoria());
 
     if (graficoDespesas) graficoDespesas.destroy();
-
-    // Se ainda não há despesas, não exibe gráfico, mas mantém o título
     if (nomes.length === 0) return;
 
     graficoDespesas = new Chart(ctx, {
         type: "pie",
-        data: {
-            labels: nomes,
-            datasets: [{
-                data: valores,
-                backgroundColor: [
-                    "#3498db", "#9b59b6", "#1abc9c", "#e67e22",
-                    "#e74c3c", "#2ecc71", "#f1c40f"
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: { legend: { position: "bottom" } }
-        }
+        data: { labels: nomes, datasets: [{ data: valores, backgroundColor: cores }] },
+        options: { responsive: true, plugins: { legend: { position: "bottom" } } }
     });
+
+    atualizarListaDespesas();
 }
 
-// Atualizar tabela
-function atualizarTabela() {
-    const tbody = document.querySelector("#tabelaMeses tbody");
-    tbody.innerHTML = "";
-    dadosMensais.forEach((m, i) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>${m.mes}/${m.ano}</td>
-            <td>R$ ${m.receita.toFixed(2)}</td>
-            <td>R$ ${m.despesa.toFixed(2)}</td>
-            <td>${m.taxa.toFixed(2)}%</td>
-            <td><button onclick="removerMes(${i})">Remover</button></td>
-        `;
-        tbody.appendChild(tr);
-    });
+// Gera cor aleatória para gráfico de pizza
+function gerarCorAleatoria() {
+    return `hsl(${Math.floor(Math.random() * 360)}, 70%, 50%)`;
 }
 
-// Eventos
+// -------------------- Eventos --------------------
 document.getElementById("addMesBtn").addEventListener("click", adicionarMes);
 document.getElementById("addDespesaBtn").addEventListener("click", adicionarDespesa);
 

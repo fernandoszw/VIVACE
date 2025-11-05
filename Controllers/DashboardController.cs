@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Vivace.Context;
-using Vivace.Models;
-using Vivace.DTOs;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using Vivace.DTOs;
+using Vivace.Interfaces;
+using Vivace.Models;
+using VIVACE.DTOs;
 using VIVACE.Models;
 
 namespace Vivace.Controllers
@@ -14,21 +13,17 @@ namespace Vivace.Controllers
     [Route("api/[controller]")]
     public class DashboardController : ControllerBase
     {
-        private readonly FinancasContext _context;
+        private readonly IDashboardService _dashboardService;
 
-        public DashboardController(FinancasContext context)
+        public DashboardController(IDashboardService dashboardService)
         {
-            _context = context;
+            _dashboardService = dashboardService;
         }
 
-        // GET: api/dashboard/meses
         [HttpGet("meses")]
         public async Task<IActionResult> ObterMeses()
         {
-            var dashboards = await _context.Dashboards
-                .Include(d => d.Despesas)
-                .ToListAsync();
-
+            var dashboards = await _dashboardService.ObterTodosMesesAsync();
             var result = dashboards.Select(d => new DashBoardResumoDto
             {
                 Id = d.Id,
@@ -48,67 +43,79 @@ namespace Vivace.Controllers
             return Ok(result);
         }
 
-        // POST: api/dashboard/adicionar
         [HttpPost("adicionar")]
-        public async Task<IActionResult> AdicionarMes([FromBody] Dashboard dashboard)
+        public async Task<IActionResult> AdicionarMes([FromBody] DashboardCreateDto dto)
         {
-            if (dashboard == null)
-                return BadRequest(new { message = "Dados inválidos" });
+            if (!ModelState.IsValid) return BadRequest("Dados inválidos");
 
-            _context.Dashboards.Add(dashboard);
-            await _context.SaveChangesAsync();
-            return Ok(dashboard);
-        }
-
-        // POST: api/dashboard/adicionar-despesa/{dashboardId}
-        [HttpPost("adicionar-despesa/{dashboardId}")]
-        public async Task<IActionResult> AdicionarDespesa(int dashboardId, [FromBody] DespesaDto despesaDto)
-        {
-            if (despesaDto == null || despesaDto.Valor <= 0)
-                return BadRequest(new { message = "Despesa inválida" });
-
-            var dashboard = await _context.Dashboards
-                .Include(d => d.Despesas)
-                .FirstOrDefaultAsync(d => d.Id == dashboardId);
-
-            if (dashboard == null)
-                return NotFound(new { message = "Mês não encontrado" });
-
-            var novaDespesa = new Despesa
+            var mesNumero = MesParaNumero(dto.Mes);
+            var dashboard = new Dashboard
             {
-                Nome = despesaDto.Nome,
-                Valor = despesaDto.Valor,
-                MesNumero = dashboard.MesNumero,
-                Ano = dashboard.Ano,
-                DashboardId = dashboard.Id
+                Mes = dto.Mes,
+                Ano = dto.Ano,
+                Receita = dto.Receita,
+                Despesa = dto.Despesa,
+                Taxa = dto.Taxa,
+                MesNumero = mesNumero
             };
 
-            dashboard.Despesas.Add(novaDespesa);
-            dashboard.Despesa = dashboard.Despesas.Sum(d => d.Valor);
-
-            _context.Update(dashboard);
-            await _context.SaveChangesAsync();
-
-            return Ok(new DespesaDto
-            {
-                Id = novaDespesa.Id,
-                Nome = novaDespesa.Nome,
-                Valor = novaDespesa.Valor
-            });
+            var result = await _dashboardService.AdicionarMesAsync(dashboard);
+            return Ok(result);
         }
 
-        // DELETE: api/dashboard/remover/{id}
+        [HttpPost("adicionar-despesa/{dashboardId}")]
+        public async Task<IActionResult> AdicionarDespesa(int dashboardId, [FromBody] DespesaCreateDto dto)
+        {
+            if (!ModelState.IsValid) return BadRequest("Despesa inválida");
+
+            try
+            {
+                var despesa = new Despesa
+                {
+                    Nome = dto.Nome,
+                    Valor = dto.Valor
+                };
+
+                var result = await _dashboardService.AdicionarDespesaAsync(dashboardId, despesa);
+                return Ok(new DespesaDto
+                {
+                    Id = result.Id,
+                    Nome = result.Nome,
+                    Valor = result.Valor
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         [HttpDelete("remover/{id}")]
         public async Task<IActionResult> RemoverMes(int id)
         {
-            var dashboard = await _context.Dashboards.FindAsync(id);
-            if (dashboard == null)
-                return NotFound();
-
-            _context.Dashboards.Remove(dashboard);
-            await _context.SaveChangesAsync();
-
+            var success = await _dashboardService.RemoverMesAsync(id);
+            if (!success) return NotFound();
             return Ok();
+        }
+
+        private int MesParaNumero(string mes)
+        {
+            return mes.ToLower() switch
+            {
+                "janeiro" => 1,
+                "fevereiro" => 2,
+                "março" => 3,
+                "abril" => 4,
+                "maio" => 5,
+                "junho" => 6,
+                "julho" => 7,
+                "agosto" => 8,
+                "setembro" => 9,
+                "outubro" => 10,
+                "novembro" => 11,
+                "dezembro" => 12,
+                _ => 0
+            };
         }
     }
 }

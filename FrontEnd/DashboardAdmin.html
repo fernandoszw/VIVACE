@@ -4,42 +4,45 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vivace | Visão Geral Financeira</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="DashboardAdmin.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <header>
-    <h1>Visão Geral Financeira</h1>
+    <div class="logo">Vivace</div>
+    <nav>
+      <button class="nav-btn active">Visão Geral</button>
+      <button class="nav-btn" id="btnFinanceiro">Financeiro</button>
+      <button class="nav-btn">Documentos</button>
+      <button class="nav-btn">Vistoria</button>
+    </nav>
   </header>
 
   <main>
-    <!-- Formulário -->
+    <h1>Visão Geral Financeira</h1>
+
+    <!-- Formulário de Adição de Mês -->
     <section class="form-section">
       <h3>Adicionar Mês</h3>
       <div class="form">
         <select id="mesInput">
           <option value="">Selecione o Mês</option>
-          <option value="Janeiro">Janeiro</option>
-          <option value="Fevereiro">Fevereiro</option>
-          <option value="Março">Março</option>
-          <option value="Abril">Abril</option>
-          <option value="Maio">Maio</option>
-          <option value="Junho">Junho</option>
-          <option value="Julho">Julho</option>
-          <option value="Agosto">Agosto</option>
-          <option value="Setembro">Setembro</option>
-          <option value="Outubro">Outubro</option>
-          <option value="Novembro">Novembro</option>
-          <option value="Dezembro">Dezembro</option>
+          <option value="Janeiro" data-num="1">Janeiro</option>
+          <option value="Fevereiro" data-num="2">Fevereiro</option>
+          <option value="Março" data-num="3">Março</option>
+          <option value="Abril" data-num="4">Abril</option>
+          <option value="Maio" data-num="5">Maio</option>
+          <option value="Junho" data-num="6">Junho</option>
+          <option value="Julho" data-num="7">Julho</option>
+          <option value="Agosto" data-num="8">Agosto</option>
+          <option value="Setembro" data-num="9">Setembro</option>
+          <option value="Outubro" data-num="10">Outubro</option>
+          <option value="Novembro" data-num="11">Novembro</option>
+          <option value="Dezembro" data-num="12">Dezembro</option>
         </select>
 
         <select id="anoInput">
           <option value="">Selecione o Ano</option>
-          <option value="2023">2023</option>
-          <option value="2024">2024</option>
-          <option value="2025">2025</option>
-          <option value="2026">2026</option>
-          <option value="2027">2027</option>
         </select>
 
         <input type="number" id="receitaInput" placeholder="Receita (R$)" />
@@ -68,16 +71,13 @@
 
     <!-- Gráficos lado a lado -->
     <section class="graficos-container">
-      <!-- Evolução Financeira -->
       <div class="grafico">
         <h3>Evolução Financeira — Receita x Despesa</h3>
         <canvas id="graficoEvolucao"></canvas>
-
         <h4>Meses adicionados:</h4>
         <ul id="listaMesesRemover"></ul>
       </div>
 
-      <!-- Distribuição de Despesas -->
       <div class="grafico">
         <h3>Distribuição de Despesas — <span id="mesAnoUltimoMes">Nenhum mês adicionado</span></h3>
         <div class="form">
@@ -90,7 +90,6 @@
       </div>
     </section>
 
-    <!-- Tabela -->
     <section class="tabela">
       <h3>Meses Adicionados</h3>
       <table id="tabelaMeses">
@@ -108,6 +107,6 @@
     </section>
   </main>
 
-  <script src="script.js"></script>
+  <script src="DashboardAdmin.js"></script>
 </body>
 </html>

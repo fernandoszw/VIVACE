@@ -1,8 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Vivace.Context;
+using Vivace.Interfaces;
 using Vivace.Models;
 using VIVACE.Models;
-using Vivace.Interfaces;
 
 namespace Vivace.Service
 {
@@ -15,7 +19,6 @@ namespace Vivace.Service
             _context = context;
         }
 
-        // ✅ Adicionar novo mês
         public async Task<Dashboard> AdicionarMesAsync(Dashboard dashboard)
         {
             _context.Dashboards.Add(dashboard);
@@ -23,7 +26,6 @@ namespace Vivace.Service
             return dashboard;
         }
 
-        // ✅ Obter todos os meses
         public async Task<List<Dashboard>> ObterTodosMesesAsync()
         {
             return await _context.Dashboards
@@ -33,7 +35,6 @@ namespace Vivace.Service
                 .ToListAsync();
         }
 
-        // ✅ Adicionar despesa distribuída
         public async Task<Despesa> AdicionarDespesaAsync(int dashboardId, Despesa despesa)
         {
             var dashboard = await _context.Dashboards
@@ -45,9 +46,11 @@ namespace Vivace.Service
 
             var totalDistribuido = dashboard.Despesas.Sum(d => d.Valor);
             if (totalDistribuido + despesa.Valor > dashboard.Despesa)
-                throw new InvalidOperationException("Total das despesas distribuídas excede o limite planejado.");
+                throw new InvalidOperationException("Excede o limite da despesa do mês.");
 
             despesa.DashboardId = dashboardId;
+            despesa.MesNumero = dashboard.MesNumero;
+            despesa.Ano = dashboard.Ano;
 
             _context.Despesas.Add(despesa);
             await _context.SaveChangesAsync();
@@ -55,7 +58,6 @@ namespace Vivace.Service
             return despesa;
         }
 
-        // ✅ Remover mês
         public async Task<bool> RemoverMesAsync(int id)
         {
             var dashboard = await _context.Dashboards
@@ -67,8 +69,8 @@ namespace Vivace.Service
 
             _context.Despesas.RemoveRange(dashboard.Despesas);
             _context.Dashboards.Remove(dashboard);
-
             await _context.SaveChangesAsync();
+
             return true;
         }
     }
