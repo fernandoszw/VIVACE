@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\429434624\\Documents\\VIVACE\\Vivace_Projeto\\Vivace.csproj": {}
+    "C:\\Users\\384695624\\Documents\\ProjetoVivace\\Vivace.csproj": {}
   },
   "projects": {
-    "C:\\Users\\429434624\\Documents\\VIVACE\\Vivace_Projeto\\Vivace.csproj": {
+    "C:\\Users\\384695624\\Documents\\ProjetoVivace\\Vivace.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\429434624\\Documents\\VIVACE\\Vivace_Projeto\\Vivace.csproj",
+        "projectUniqueName": "C:\\Users\\384695624\\Documents\\ProjetoVivace\\Vivace.csproj",
         "projectName": "Vivace",
-        "projectPath": "C:\\Users\\429434624\\Documents\\VIVACE\\Vivace_Projeto\\Vivace.csproj",
-        "packagesPath": "C:\\Users\\429434624\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\429434624\\Documents\\VIVACE\\Vivace_Projeto\\obj\\",
+        "projectPath": "C:\\Users\\384695624\\Documents\\ProjetoVivace\\Vivace.csproj",
+        "packagesPath": "C:\\Users\\384695624\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\384695624\\Documents\\ProjetoVivace\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\429434624\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\384695624\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
