@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vivace | Financeiro</title>
+  <link rel="stylesheet" href="FinanceiroAdmin.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <div class="logo">Vivace</div>
+    <nav>
+      <button class="nav-btn" id="btnDashboard">Visão Geral</button>
+      <button class="nav-btn active">Financeiro</button>
+      <button class="nav-btn">Documentos</button>
+      <button class="nav-btn">Vistoria</button>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Resumo Financeiro</h1>
+
+    <!-- GRÁFICO: Últimos 6 meses -->
+    <section class="grafico">
+      <h3>Evolução dos Últimos 6 Meses</h3>
+      <canvas id="graficoEvolucao6Meses" height="140"></canvas>
+    </section>
+
+    <!-- RESUMO DO ÚLTIMO MÊS -->
+    <section class="resumo-mes">
+      <h3 id="tituloResumo">Resumo do Mês</h3>
+      <div class="card-resumo">
+        <div class="linha">
+          <span>Total de Receitas</span>
+          <strong id="totalReceita" class="verde">R$ 0,00</strong>
+        </div>
+        <div class="linha">
+          <span>Total de Despesas</span>
+          <strong id="totalDespesa" class="vermelho">R$ 0,00</strong>
+        </div>
+        <div class="linha">
+          <span>Saldo do Mês</span>
+          <strong id="saldoMes">R$ 0,00</strong>
+        </div>
+        <div class="linha">
+          <span>Fundo de Reserva</span>
+          <strong id="fundoReserva">R$ 0,00</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRINCIPAIS DESPESAS (lista com barras) -->
+    <section class="principais-despesas">
+      <h3>Principais Despesas</h3>
+      <div id="listaPrincipaisDespesas"></div>
+    </section>
+  </main>
+
+  <script src="FinanceiroAdmin.js"></script>
+</body>
+</html>
