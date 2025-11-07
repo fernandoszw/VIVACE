@@ -6009,11 +6009,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\429434624\\Documents\\VIVACE\\VIVACE\\Vivace.csproj",
+      "projectUniqueName": "C:\\Users\\429434624\\Documents\\VIVACE\\Vivace_Projeto\\Vivace.csproj",
       "projectName": "Vivace",
-      "projectPath": "C:\\Users\\429434624\\Documents\\VIVACE\\VIVACE\\Vivace.csproj",
+      "projectPath": "C:\\Users\\429434624\\Documents\\VIVACE\\Vivace_Projeto\\Vivace.csproj",
       "packagesPath": "C:\\Users\\429434624\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\429434624\\Documents\\VIVACE\\VIVACE\\obj\\",
+      "outputPath": "C:\\Users\\429434624\\Documents\\VIVACE\\Vivace_Projeto\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\429434624\\AppData\\Roaming\\NuGet\\NuGet.Config"
