@@ -28,7 +28,5 @@ h1{color:var(--blue);margin-bottom:18px}
 input, select{padding:10px;border-radius:8px;border:1px solid #ddd;flex:1;min-width:160px}
 button{background:var(--blue);color:#fff;border:0;padding:10px 14px;border-radius:8px;cursor:pointer}
 button:hover{opacity:0.95}
-.hidden{display:none}
 .qr-box{display:flex;flex-direction:column;align-items:center;gap:10px}
 .payload{background:#f3f4f6;padding:10px;border-radius:8px;max-height:150px;overflow:auto;width:100%}
-#qrCanvas{max-width:320px;width:100%;height:auto}

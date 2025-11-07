@@ -10,7 +10,8 @@ namespace Vivace.Context
 
         public DbSet<Dashboard> Dashboards { get; set; }
         public DbSet<Despesa> Despesas { get; set; }
-        public DbSet<PixKey> PixKeys { get; set; }
+        public DbSet<Pagamento> Pagamentos { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
