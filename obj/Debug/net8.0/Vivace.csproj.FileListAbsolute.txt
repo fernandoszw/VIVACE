@@ -554,7 +554,6 @@ C:\Users\gabri\Documents\Vivaceprojeto1\VIVACE\obj\Debug\net8.0\Vivace.pdb
 C:\Users\gabri\Documents\Vivaceprojeto1\VIVACE\obj\Debug\net8.0\Vivace.genruntimeconfig.cache
 C:\Users\gabri\Documents\Vivaceprojeto1\VIVACE\obj\Debug\net8.0\ref\Vivace.dll
 C:\Users\429434624\Documents\Vivace\VIVACE\bin\Debug\net8.0\appsettings.Development.json
-C:\Users\429434624\Documents\Vivace\VIVACE\bin\Debug\net8.0\appsettings.json
 C:\Users\429434624\Documents\Vivace\VIVACE\bin\Debug\net8.0\Vivace.exe
 C:\Users\429434624\Documents\Vivace\VIVACE\bin\Debug\net8.0\Vivace.deps.json
 C:\Users\429434624\Documents\Vivace\VIVACE\bin\Debug\net8.0\Vivace.runtimeconfig.json
@@ -1301,3 +1300,6 @@ C:\Users\gabri\Documents\Vivace\VIVACE\bin\Debug\net8.0\MercadoPago.dll
 C:\Users\gabri\Documents\Vivace\VIVACE\bin\Debug\net8.0\Newtonsoft.Json.dll
 C:\Users\gabri\Documents\Vivace\VIVACE\bin\Debug\net8.0\QRCoder.dll
 C:\Users\gabri\Documents\Vivace\VIVACE\bin\Debug\net8.0\zxing.dll
+C:\Users\429434624\Documents\Vivace\VIVACE\bin\Debug\net8.0\MercadoPago.dll
+C:\Users\429434624\Documents\Vivace\VIVACE\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\429434624\Documents\Vivace\VIVACE\bin\Debug\net8.0\zxing.dll

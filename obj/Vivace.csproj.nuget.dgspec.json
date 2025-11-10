@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\gabri\\Documents\\Vivace\\VIVACE\\Vivace.csproj": {}
+    "C:\\Users\\429434624\\Documents\\Vivace\\VIVACE\\Vivace.csproj": {}
   },
   "projects": {
-    "C:\\Users\\gabri\\Documents\\Vivace\\VIVACE\\Vivace.csproj": {
+    "C:\\Users\\429434624\\Documents\\Vivace\\VIVACE\\Vivace.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\gabri\\Documents\\Vivace\\VIVACE\\Vivace.csproj",
+        "projectUniqueName": "C:\\Users\\429434624\\Documents\\Vivace\\VIVACE\\Vivace.csproj",
         "projectName": "Vivace",
-        "projectPath": "C:\\Users\\gabri\\Documents\\Vivace\\VIVACE\\Vivace.csproj",
-        "packagesPath": "C:\\Users\\gabri\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\gabri\\Documents\\Vivace\\VIVACE\\obj\\",
+        "projectPath": "C:\\Users\\429434624\\Documents\\Vivace\\VIVACE\\Vivace.csproj",
+        "packagesPath": "C:\\Users\\429434624\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\429434624\\Documents\\Vivace\\VIVACE\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\gabri\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\429434624\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -37,8 +37,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.300"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -98,7 +97,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
