@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Vivace.Migrations
 {
     /// <inheritdoc />
-    public partial class ListaDashBoardEReceita : Migration
+    public partial class CriacaoTabelaDashboard : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,14 +19,31 @@ namespace Vivace.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Mes = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Ano = table.Column<int>(type: "int", nullable: false),
-                    Receita = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Despesa = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Taxa = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Receita = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Despesa = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Taxa = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     MesNumero = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Dashboards", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Pagamentos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Valor = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    QrCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Pago = table.Column<bool>(type: "bit", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pagamentos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -35,7 +53,7 @@ namespace Vivace.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Valor = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     MesNumero = table.Column<int>(type: "int", nullable: false),
                     Ano = table.Column<int>(type: "int", nullable: false),
                     DashboardId = table.Column<int>(type: "int", nullable: false)
@@ -62,6 +80,9 @@ namespace Vivace.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Despesas");
+
+            migrationBuilder.DropTable(
+                name: "Pagamentos");
 
             migrationBuilder.DropTable(
                 name: "Dashboards");

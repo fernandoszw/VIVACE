@@ -34,6 +34,7 @@ namespace Vivace.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Despesa")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Mes")
@@ -44,9 +45,11 @@ namespace Vivace.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Receita")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Taxa")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -76,6 +79,7 @@ namespace Vivace.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Valor")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -85,7 +89,7 @@ namespace Vivace.Migrations
                     b.ToTable("Despesas");
                 });
 
-            modelBuilder.Entity("Vivace.Models.PixKey", b =>
+            modelBuilder.Entity("Vivace.Models.Pagamento", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -93,26 +97,27 @@ namespace Vivace.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Cidade")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CriadoEm")
+                    b.Property<DateTime>("DataCriacao")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Nome")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Tipo")
+                    b.Property<string>("Descricao")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Valor")
+                    b.Property<bool>("Pago")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("QrCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Valor")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("PixKeys");
+                    b.ToTable("Pagamentos");
                 });
 
             modelBuilder.Entity("Vivace.Models.Despesa", b =>

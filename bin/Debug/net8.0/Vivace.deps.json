@@ -13,6 +13,7 @@
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.10",
           "QRCoder": "1.7.0",
           "Swashbuckle.AspNetCore": "6.4.0",
+          "ZXing.Net": "0.16.11",
           "iTextSharp.LGPLv2.Core": "3.7.7",
           "mercadopago-sdk": "2.8.0"
         },
@@ -1279,6 +1280,14 @@
             "fileVersion": "6.0.21.52210"
           }
         }
+      },
+      "ZXing.Net/0.16.11": {
+        "runtime": {
+          "lib/net8.0/zxing.dll": {
+            "assemblyVersion": "0.16.11.0",
+            "fileVersion": "0.16.11.0"
+          }
+        }
       }
     }
   },
@@ -2015,6 +2024,13 @@
       "sha512": "sha512-IXoJOXIqc39AIe+CIR7koBtRGMiCt/LPM3lI+PELtDIy9XdyeSrwXFdWV9dzJ2Awl0paLWUaknLxFQ5HpHZUog==",
       "path": "system.windows.extensions/6.0.0",
       "hashPath": "system.windows.extensions.6.0.0.nupkg.sha512"
+    },
+    "ZXing.Net/0.16.11": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-OZfAVu88hl87BffQ+rlWCj/vLvAhhCK4QnFaoveeF/MY8SjHNSYBQ3qyUEWlPKNgBQGh1syXhCDg10vUnCsqkg==",
+      "path": "zxing.net/0.16.11",
+      "hashPath": "zxing.net.0.16.11.nupkg.sha512"
     }
   }
 }
