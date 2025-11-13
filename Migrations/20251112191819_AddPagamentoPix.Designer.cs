@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vivace.Context;
 
@@ -11,9 +12,11 @@ using Vivace.Context;
 namespace Vivace.Migrations
 {
     [DbContext(typeof(FinancasContext))]
-    partial class FinancasContextModelSnapshot : ModelSnapshot
+    [Migration("20251112191819_AddPagamentoPix")]
+    partial class AddPagamentoPix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,11 +131,22 @@ namespace Vivace.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("DataPagamento")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Metodo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NomeConta")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PixCopiaCola")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("QrCodeBase64")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -147,9 +161,6 @@ namespace Vivace.Migrations
                     b.Property<decimal>("Valor")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("Vencimento")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

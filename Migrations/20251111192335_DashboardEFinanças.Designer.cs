@@ -12,8 +12,8 @@ using Vivace.Context;
 namespace Vivace.Migrations
 {
     [DbContext(typeof(FinancasContext))]
-    [Migration("20251109230039_CriacaoTabelaDashboard")]
-    partial class CriacaoTabelaDashboard
+    [Migration("20251111192335_DashboardEFinanças")]
+    partial class DashboardEFinanças
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,6 +60,37 @@ namespace Vivace.Migrations
                     b.ToTable("Dashboards");
                 });
 
+            modelBuilder.Entity("Vivace.Models.Conta", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Paga")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Valor")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("Vencimento")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Contas");
+                });
+
             modelBuilder.Entity("Vivace.Models.Despesa", b =>
                 {
                     b.Property<int>("Id")
@@ -100,17 +131,30 @@ namespace Vivace.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DataCriacao")
+                    b.Property<DateTime>("DataPagamento")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Descricao")
+                    b.Property<string>("Metodo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Pago")
-                        .HasColumnType("bit");
+                    b.Property<string>("NomeConta")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("QrCode")
+                    b.Property<string>("PixCopiaCola")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("QrCodeBase64")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TxId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

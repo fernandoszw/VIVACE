@@ -1,14 +1,13 @@
-using System;
-
 namespace Vivace.Models
 {
     public class Pagamento
     {
         public int Id { get; set; }
-        public string Descricao { get; set; } = string.Empty;
+        public string NomeConta { get; set; } = string.Empty;
         public decimal Valor { get; set; }
-        public string QrCode { get; set; } = string.Empty;
-        public bool Pago { get; set; } = false;
-        public DateTime DataCriacao { get; set; } = DateTime.Now;
+        public DateTime Vencimento { get; set; }
+        public string Metodo { get; set; } = "PIX";
+        public string Status { get; set; } = "Pendente";
+        public string TxId { get; set; } = string.Empty;
     }
 }

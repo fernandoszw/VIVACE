@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pagar Conta | Vivace</title>
+  <link rel="stylesheet" href="../css/Pagamento.css" />
+</head>
+<body>
+  <header><h1>💰 Pagamento PIX</h1></header>
+
+  <main>
+    <form id="formPagamento">
+      <label>Nome da Conta</label>
+      <input type="text" id="nome" required placeholder="Ex: Condomínio Outubro" />
+
+      <label>Valor (R$)</label>
+      <input type="number" id="valor" step="0.01" required placeholder="Ex: 850.00" />
+
+      <label>Descrição</label>
+      <textarea id="descricao" placeholder="Opcional"></textarea>
+
+      <button type="submit">Gerar PIX</button>
+    </form>
+
+    <section id="resultado" class="hidden">
+      <h2>✅ PIX Gerado</h2>
+      <img id="qrcode" alt="QR Code PIX" width="220" height="220" />
+      <p><strong>Pix Copia e Cola:</strong></p>
+      <textarea id="pixcopiacola" readonly></textarea>
+      <button id="btnCopiar">📋 Copiar Código</button>
+      <button id="btnPaguei" class="pagar-btn">✅ Já realizei o pagamento</button>
+    </section>
+  </main>
+
+  <script src="../js/Pagamento.js"></script>
+</body>
+</html>
