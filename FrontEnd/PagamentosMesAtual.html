@@ -1,11 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Mês Atual | Vivace</title>
   <link rel="stylesheet" href="PagamentosMesAtual.css" />
 </head>
+
 <body>
   <header class="top-bar">
     <div>
@@ -25,10 +27,12 @@
 
   <main class="content">
     <div class="controls">
-      <label>Chaves PIX (do banco): 
+      <label>Chaves PIX (do banco):
         <button id="btnLoadKeys" class="btn small">Carregar chaves</button>
       </label>
-      <select id="pixKeySelect"><option value="">— selecionar chave do DB —</option></select>
+      <select id="pixKeySelect">
+        <option value="">— selecionar chave do DB —</option>
+      </select>
       <button id="btnUseManual" class="btn small">Inserir chave manual</button>
     </div>
 
@@ -58,9 +62,18 @@
           <div class="modal-value" id="modalValue">R$ 0,00</div>
 
           <table class="meta">
-            <tr><td>Beneficiário:</td><td id="modalBenef">Vivace Condomínio</td></tr>
-            <tr><td>Unidade:</td><td id="modalUnit">Apt 101</td></tr>
-            <tr><td>Descrição:</td><td id="modalDesc">-</td></tr>
+            <tr>
+              <td>Beneficiário:</td>
+              <td id="modalBenef">Vivace Condomínio</td>
+            </tr>
+            <tr>
+              <td>Unidade:</td>
+              <td id="modalUnit">Apt 101</td>
+            </tr>
+            <tr>
+              <td>Descrição:</td>
+              <td id="modalDesc">-</td>
+            </tr>
           </table>
 
           <label class="label">Código PIX (Copia & Cola)</label>
@@ -78,4 +91,5 @@
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
   <script src="PagamentosMesAtual.js"></script>
 </body>
+
 </html>

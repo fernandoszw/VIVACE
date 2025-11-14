@@ -1,4 +1,4 @@
-const apiListar = "/api/pix/listar";
+const apiListar = "http://localhost:5202/api/Dashboard/meses";
 
 const billsPagosWrap = document.getElementById("billsPagos");
 const billsPendentesWrap = document.getElementById("billsPendentes");

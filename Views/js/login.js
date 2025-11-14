@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (roleLogado === "admin") {
       window.location.href = "../FrontEnd/DashboardAdmin.html";
     } else {
-      window.location.href = "./html/dashboard.html";
+      window.location.href = "../FrontEnd/PagamentosMesAtual.html";
     }
   }
 
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (role === "admin") {
             window.location.href = "../FrontEnd/DashboardAdmin.html";
           } else {
-            window.location.href = "./html/dashboard.html";
+            window.location.href = "../FrontEnd/PagamentosMesAtual.html";
           }
         }, 1000);
       } catch (err) {
@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (role === "admin") {
             window.location.href = "../FrontEnd/DashboardAdmin.html";
           } else {
-            window.location.href = "./html/dashboard.html";
+            window.location.href = "../FrontEnd/PagamentosMesAtual.html";
           }
         }, 1000);
       } catch (err) {
