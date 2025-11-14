@@ -7,7 +7,7 @@
 
 body {
   font-family: "Poppins", sans-serif;
-  background: linear-gradient(135deg, #0a2540, #2a9df4);
+  background-color: #264775;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -22,20 +22,8 @@ body::before {
   position: absolute;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle at 20% 20%, #2a9df4 0%, transparent 40%),
-    radial-gradient(circle at 80% 80%, #0077b6 0%, transparent 40%);
-  animation: moveBg 15s infinite alternate ease-in-out;
+  background-color: #264775;
   z-index: 0;
-}
-
-@keyframes moveBg {
-  0% {
-    transform: translate(0, 0);
-  }
-
-  100% {
-    transform: translate(-25%, -25%);
-  }
 }
 
 .card {
@@ -113,7 +101,7 @@ button {
   margin-top: 25px;
   border: none;
   border-radius: 10px;
-  background: linear-gradient(135deg, #0077b6, #00b4d8);
+  background-color: #1d3557;
   color: #fff;
   font-weight: 600;
   font-size: 1em;
@@ -124,7 +112,7 @@ button {
 }
 
 button:hover {
-  background: linear-gradient(135deg, #0096c7, #48cae4);
+  background-color: #182c47;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 150, 199, 0.4);
 }

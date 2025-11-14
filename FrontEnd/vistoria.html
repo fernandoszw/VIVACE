@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vivace | Vistoria de Apartamento</title>
+    <link rel="stylesheet" href="./vistoria.css" />
+</head>
+
+<body>
+    <header>
+        <div class="logo">Vivace</div>
+        <nav>
+            <button class="nav-btn" onclick="window.location.href='./DashboardAdmin.html'">Visão Geral</button>
+            <button class="nav-btn" id="btnFinanceiro">Financeiro</button>
+            <button class="nav-btn">Documentos</button>
+            <button class="nav-btn active">Vistoria</button>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Vistoria de Apartamento</h1>
+
+        <section>
+            <h3>📷 Fotos de Vistoria — Início do Contrato</h3>
+            <div class="upload-group">
+                <label for="fotosInicio">Selecione as fotos:</label>
+                <input type="file" id="fotosInicio" accept="image/*" multiple />
+                <div id="previewInicio" class="preview-container"></div>
+            </div>
+        </section>
+
+        <section>
+            <h3>📷 Fotos de Vistoria — Fim do Contrato</h3>
+            <div class="upload-group">
+                <label for="fotosFim">Selecione as fotos:</label>
+                <input type="file" id="fotosFim" accept="image/*" multiple />
+                <div id="previewFim" class="preview-container"></div>
+            </div>
+        </section>
+
+        <section>
+            <h3>📄 Anexar Laudo (PDF ou DOC)</h3>
+            <div class="upload-group">
+                <label for="arquivoLaudo">Selecione o arquivo:</label>
+                <input type="file" id="arquivoLaudo" accept=".pdf,.doc,.docx" />
+                <p id="nomeArquivo">Nenhum arquivo selecionado</p>
+            </div>
+        </section>
+
+        <button id="salvarVistoria">Salvar Vistoria</button>
+        <button class="back-btn" onclick="window.location.href='./DashboardAdmin.html'">Voltar</button>
+    </main>
+    <script type="module" src="./vistoria.js"></script>
+</body>
+
+</html>

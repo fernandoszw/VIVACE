@@ -73,9 +73,17 @@
               "target": "Package",
               "version": "[6.4.0, )"
             },
+            "ZXing.Net": {
+              "target": "Package",
+              "version": "[0.16.11, )"
+            },
             "iTextSharp.LGPLv2.Core": {
               "target": "Package",
               "version": "[3.7.7, )"
+            },
+            "mercadopago-sdk": {
+              "target": "Package",
+              "version": "[2.8.0, )"
             }
           },
           "imports": [

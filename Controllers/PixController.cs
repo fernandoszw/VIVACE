@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using QRCoder;
-using System.Text;
-using Vivace.Context;
-using Vivace.Models;
-using VIVACE.Models;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System;
 
 namespace Vivace.Controllers
 {
@@ -11,129 +10,120 @@ namespace Vivace.Controllers
     [Route("api/[controller]")]
     public class PixController : ControllerBase
     {
-        private readonly FinancasContext _context;
-
-        public PixController(FinancasContext context)
-        {
-            _context = context;
-        }
-
-        // ===================== 1️⃣ LISTAR CHAVES =====================
-        [HttpGet("keys")]
-        public IActionResult GetPixKeys()
+        [HttpPost("gerar")]
+        public IActionResult GerarPix([FromBody] PixRequest req)
         {
             try
             {
-                var keys = _context.PixKeys.ToList();
-                return Ok(keys);
+                // 🔹 Dados do PIX
+                string chavePix = "vivace@condominio.com"; // sua chave real
+                string nome = "Vivace Condominio";
+                string cidade = "SAO PAULO";
+                string valor = req.Valor.ToString("0.00").Replace(",", ".");
+                string descricao = req.Descricao ?? "Pagamento";
+                string txid = Guid.NewGuid().ToString().Substring(0, 10);
+
+                // 🔹 Monta o código EMV do Banco Central (PIX Copia e Cola)
+                string emv = MontarEMVPix(chavePix, nome, cidade, valor, descricao, txid);
+
+                // 🔹 Gera o QR Code em Base64 (imagem)
+                var qrBase64 = GerarQRCodeBase64(emv);
+
+                // 🔹 Retorna para o front
+                return Ok(new
+                {
+                    qrCode = emv,
+                    qrCodeBase64 = qrBase64,
+                    valor = valor,
+                    descricao = descricao,
+                    nome = nome,
+                    cidade = cidade
+                });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = $"Erro ao buscar chaves PIX: {ex.Message}" });
+                return StatusCode(500, new { erro = ex.Message });
             }
         }
 
-        // ===================== 2️⃣ CADASTRAR CHAVE =====================
-        [HttpPost("register")]
-        public IActionResult RegisterKey([FromBody] PixKey key)
+        // ✅ Monta código PIX completo (EMV)
+        private string MontarEMVPix(string chave, string nome, string cidade, string valor, string descricao, string txid)
         {
-            try
-            {
-                if (key == null || string.IsNullOrEmpty(key.Tipo) || string.IsNullOrEmpty(key.Valor))
-                    return BadRequest(new { message = "Tipo e valor da chave são obrigatórios." });
-
-                _context.PixKeys.Add(key);
-                _context.SaveChanges();
-                return Ok(new { message = "Chave PIX cadastrada com sucesso!" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = $"Erro ao cadastrar chave: {ex.Message}" });
-            }
+            string emv = "000201"; // cabeçalho
+            emv += "26360014br.gov.bcb.pix"; // domínio do Banco Central
+            emv += "0114" + chave.Length.ToString("D2") + chave; // chave
+            if (!string.IsNullOrEmpty(descricao))
+                emv += "02" + descricao.Length.ToString("D2") + descricao; // descrição
+            emv += "52040000"; // código adicional
+            emv += "5303986"; // moeda (986 = BRL)
+            emv += "540" + valor.Length.ToString("D2") + valor; // valor
+            emv += "5802BR"; // país
+            emv += "590" + nome.Length.ToString("D2") + nome; // nome
+            emv += "600" + cidade.Length.ToString("D2") + cidade; // cidade
+            emv += "62070503***"; // txid
+            string crc16 = CalcularCRC16(emv + "6304");
+            emv += "6304" + crc16;
+            return emv;
         }
 
-        // ===================== 3️⃣ GERAR PAYLOAD + QR CODE =====================
-        [HttpGet("payload")]
-        public IActionResult GetPixPayload([FromQuery] int? keyId, [FromQuery] string rawKey,
-                                           [FromQuery] decimal? amount, [FromQuery] string txid,
-                                           [FromQuery] string desc)
+        // ✅ Calcula CRC16 para PIX
+        private string CalcularCRC16(string input)
         {
-            try
-            {
-                string chave;
-                string nome;
-                string cidade;
-
-                if (keyId.HasValue)
-                {
-                    var key = _context.PixKeys.FirstOrDefault(k => k.Id == keyId.Value);
-                    if (key == null) return NotFound(new { message = "Chave não encontrada." });
-
-                    chave = key.Valor;
-                    nome = key.Nome ?? "VIVACE";
-                    cidade = key.Cidade ?? "SAO PAULO";
-                }
-                else
-                {
-                    chave = rawKey;
-                    nome = "VIVACE";
-                    cidade = "SAO PAULO";
-                }
-
-                var payload = BuildPixPayload(chave, nome, cidade, amount, txid, desc);
-
-                using (var qrGenerator = new QRCodeGenerator())
-                {
-                    var qrData = qrGenerator.CreateQrCode(payload, QRCodeGenerator.ECCLevel.Q);
-                    var qrCode = new PngByteQRCode(qrData);
-                    var qrBytes = qrCode.GetGraphic(20);
-                    var base64 = $"data:image/png;base64,{Convert.ToBase64String(qrBytes)}";
-
-                    return Ok(new { payload, qrBase64 = base64 });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = $"Erro ao gerar QR: {ex.Message}" });
-            }
-        }
-
-        // ===================== 4️⃣ FUNÇÃO DE PAYLOAD =====================
-        private string BuildPixPayload(string chave, string nome, string cidade, decimal? amount, string txid, string desc)
-        {
-            string tlv(string id, string value)
-            {
-                var v = value ?? "";
-                return id + v.Length.ToString("D2") + v;
-            }
-
-            var gui = tlv("00", "br.gov.bcb.pix");
-            var chaveTag = tlv("01", chave);
-            var merchantAccount = tlv("26", gui + chaveTag);
-            var payload = tlv("00", "01") + merchantAccount +
-                          tlv("52", "0000") +
-                          tlv("53", "986") +
-                          (amount.HasValue ? tlv("54", amount.Value.ToString("F2")) : "") +
-                          tlv("58", "BR") +
-                          tlv("59", nome) +
-                          tlv("60", cidade) +
-                          tlv("62", tlv("05", txid ?? "")) +
-                          "6304"; // placeholder for CRC
-
-            string crc = CRC16(payload);
-            return payload + crc;
-        }
-
-        private static string CRC16(string input)
-        {
+            ushort polynomial = 0x1021;
             ushort crc = 0xFFFF;
-            foreach (char c in input)
+
+            foreach (byte b in System.Text.Encoding.ASCII.GetBytes(input))
             {
-                crc ^= (ushort)(c << 8);
+                crc ^= (ushort)(b << 8);
                 for (int i = 0; i < 8; i++)
-                    crc = (ushort)((crc & 0x8000) != 0 ? (crc << 1) ^ 0x1021 : crc << 1);
+                {
+                    if ((crc & 0x8000) != 0)
+                        crc = (ushort)((crc << 1) ^ polynomial);
+                    else
+                        crc <<= 1;
+                }
             }
+
             return crc.ToString("X4");
         }
+
+        // ✅ Gera imagem Base64 do QR Code (sem dependência externa)
+        private string GerarQRCodeBase64(string texto)
+        {
+            var qrGen = new ZXing.BarcodeWriterPixelData
+            {
+                Format = ZXing.BarcodeFormat.QR_CODE,
+                Options = new ZXing.Common.EncodingOptions
+                {
+                    Height = 300,
+                    Width = 300,
+                    Margin = 1
+                }
+            };
+
+            var pixelData = qrGen.Write(texto);
+            using var bitmap = new Bitmap(pixelData.Width, pixelData.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
+            var bitmapData = bitmap.LockBits(new Rectangle(0, 0, pixelData.Width, pixelData.Height),
+                                             System.Drawing.Imaging.ImageLockMode.WriteOnly,
+                                             System.Drawing.Imaging.PixelFormat.Format32bppRgb);
+            try
+            {
+                System.Runtime.InteropServices.Marshal.Copy(pixelData.Pixels, 0, bitmapData.Scan0, pixelData.Pixels.Length);
+            }
+            finally
+            {
+                bitmap.UnlockBits(bitmapData);
+            }
+
+            using var ms = new MemoryStream();
+            bitmap.Save(ms, ImageFormat.Png);
+            return "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
+        }
+    }
+
+    public class PixRequest
+    {
+        public string Descricao { get; set; }
+        public decimal Valor { get; set; }
     }
 }
