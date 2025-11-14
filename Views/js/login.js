@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Redirecionamento automático se já estiver logado
   if (usuarioLogado && roleLogado) {
     if (roleLogado === "admin") {
-      window.location.href = "./html/admin-dashboard.html";
+      window.location.href = "../FrontEnd/DashboardAdmin.html";
     } else {
       window.location.href = "./html/dashboard.html";
     }
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setMessage("Cadastro realizado com sucesso!", false);
         setTimeout(() => {
           if (role === "admin") {
-            window.location.href = "./html/admin-dashboard.html";
+            window.location.href = "../FrontEnd/DashboardAdmin.html";
           } else {
             window.location.href = "./html/dashboard.html";
           }
@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setMessage("Login realizado com sucesso!", false);
         setTimeout(() => {
           if (role === "admin") {
-            window.location.href = "./html/admin-dashboard.html";
+            window.location.href = "../FrontEnd/DashboardAdmin.html";
           } else {
             window.location.href = "./html/dashboard.html";
           }

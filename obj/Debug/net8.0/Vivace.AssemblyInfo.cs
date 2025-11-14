@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Vivace")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+74eaecb52a85e97cf4e1929faad06c9d1c0ecf76")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+df2cc856b723d4f37d6674eeb327c3219e3b07c8")]
 [assembly: System.Reflection.AssemblyProductAttribute("Vivace")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Vivace")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
