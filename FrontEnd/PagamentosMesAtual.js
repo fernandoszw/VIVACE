@@ -46,7 +46,7 @@ function renderBills(){
 
 // Carregar chaves do DB
 btnLoadKeys.addEventListener("click", async ()=>{
-  const res=await fetch('/api/PixKey');
+  const res=await fetch('http://localhost:5202/api/PixKey');
   const data=await res.json();
   pixKeySelect.innerHTML='<option value="">— selecionar chave do DB —</option>';
   data.forEach(p=>{
@@ -62,7 +62,7 @@ btnUseManual.addEventListener("click", async ()=>{
   const chave=prompt("Digite a chave PIX:");
   if(!chave) return;
   // Salva no backend
-  const res=await fetch('/api/PixKey',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(chave)});
+  const res=await fetch('http://localhost:5202/api/PixKey',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(chave)});
   if(res.ok){alert("Chave salva!"); btnLoadKeys.click();} else alert("Erro ao salvar.");
 });
 
