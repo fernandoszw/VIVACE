@@ -1,59 +1,328 @@
-:root{
-  --blue:#153d57;
-  --muted:#6b7280;
-  --bg:#f6f5f1;
-  --card:#fff;
-  --success:#16a34a;
+/* Fonte geral */
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  background: #f6f8fc;
 }
 
-*{box-sizing:border-box;font-family:"Segoe UI",sans-serif}
-body{margin:0;background:var(--bg);color:#111}
+/* .hidden requerido pelo seu JS */
+.hidden { display: none !important; }
 
-.top-bar{
-  display:flex;justify-content:space-between;align-items:center;padding:16px 28px;background:#fff;border-bottom:1px solid #eee;
+/* ===== HEADER ===== */
+.top-bar {
+  background: #1d3557;
+  color: #fff;
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.top-bar h2{margin:0}
-.sub{color:var(--muted);margin-top:4px}
 
-.tabs{display:flex;gap:8px;justify-content:center;padding:12px;background:#fff;border-bottom:1px solid #eee}
-.tabs button{border:0;padding:10px 18px;border-radius:20px;background:transparent;cursor:pointer}
-.tabs button.active{background:var(--blue);color:#fff;box-shadow:0 6px 14px rgba(21,61,87,0.15)}
-
-.content{max-width:1100px;margin:22px auto;padding:0 18px}
-
-.controls{display:flex;gap:8px;align-items:center;margin-bottom:12px}
-select{padding:8px;border-radius:8px;border:1px solid #ddd}
-.btn{padding:8px 12px;border-radius:8px;border:0;cursor:pointer;background:#e9f0f6;color:var(--blue)}
-.btn.primary{background:var(--blue);color:#fff}
-.btn.small{padding:6px 8px;font-size:13px}
-.btn.secondary{background:#f3f5f7;color:#111}
-
-#bills{display:flex;flex-direction:column;gap:12px;margin-top:8px}
-.bill{
-  background:var(--card);padding:14px;border-radius:12px;display:flex;align-items:center;justify-content:space-between;border:1px solid #eee;
-  box-shadow:0 6px 18px rgba(0,0,0,0.03);
+.top-bar .logo {
+  font-size: 1.2em;
+  font-weight: bold;
 }
-.bill .left{display:flex;gap:12px;align-items:center}
-.icon{width:48px;height:48px;border-radius:12px;background:#f1fbff;display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:20px}
-.info h4{margin:0}
-.info p{margin:6px 0 0 0;color:var(--muted);font-size:13px}
 
-.right{display:flex;gap:12px;align-items:center}
-.amount{font-weight:700;color:var(--blue)}
-.pagar{background:var(--blue);color:#fff;padding:10px 14px;border-radius:10px;border:0;cursor:pointer}
+.nav-btn {
+  background: #457b9d;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  margin-left: 8px;
+}
 
-.resumo{display:flex;justify-content:space-between;align-items:center;margin-top:18px;background:#efece6;padding:16px;border-radius:12px}
-.total-amount{font-size:20px;font-weight:700;color:var(--blue)}
+.nav-btn.active,
+.nav-btn:hover {
+  background: #1d3557;
+}
 
-.modal{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:999}
-.hidden{display:none}
-.modal-content{background:#fff;border-radius:12px;padding:18px;max-width:920px;width:95%;position:relative}
-.modal-close{position:absolute;right:22px;top:18px;border:0;background:transparent;font-size:20px;cursor:pointer}
-.modal-row{display:flex;gap:18px;align-items:flex-start}
-.qr-wrap{flex:0 0 320px;background:#fafafa;padding:8px;border-radius:10px;display:flex;align-items:center;justify-content:center}
-.meta-wrap{flex:1}
-.modal-value{font-size:20px;color:var(--blue);margin:6px 0}
-.meta{width:100%;margin-top:8px;border-collapse:collapse}
-.meta td{padding:6px 8px;border-top:1px dashed #eee;color:var(--muted)}
-textarea#modalPayload{width:100%;height:90px;padding:8px;border-radius:8px;border:1px solid #eee;margin-top:8px}
-.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+/* ===== CONTEÚDO ===== */
+main {
+  padding: 25px;
+}
+
+h1 {
+  color: #1d3557;
+}
+
+/* Chave PIX */
+.form-section {
+  margin-bottom: 25px;
+}
+
+.linha-chave {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+#pixKeySelect {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+
+/* ======================== */
+/*      BOTÃO EXPORTAR      */
+/* ======================== */
+
+#btnExport {
+  margin: 15px 25px;
+  background: #e9ecef;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#btnExport:hover {
+  background: #dde1e4;
+}
+/* ===== BILLS ===== */
+#bills {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.bill {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 1px solid #e5e5e5;
+  transition: 0.2s;
+}
+
+.bill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.bill .left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.bill .icon {
+  background: #1d3557;
+  color: #fff;
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+}
+
+.bill .info h4 {
+  margin: 0;
+  color: #1d3557;
+}
+
+.bill .info p {
+  margin: 0;
+  opacity: 0.7;
+}
+
+.bill .right {
+  text-align: right;
+}
+
+.bill .amount {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #1d3557;
+}
+
+.badge {
+  padding: 4px 10px;
+  font-size: 0.85em;
+  border-radius: 6px;
+  margin: 5px 0;
+}
+
+.badge.pendente {
+  background: #e63946;
+  color: #fff;
+}
+
+.bill .pagar {
+  background: #1d3557;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: 0.2s;
+}
+
+.bill .pagar:hover {
+  background: #16325c;
+}
+
+/* ===== RESUMO ===== */
+.resumo {
+  margin-top: 25px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.total-span {
+  font-size: 1.3em;
+  color: #1d3557;
+}
+
+.btn-grande {
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: #1d3557;
+  color: #fff;
+}
+
+/* ===== MODAL ===== */
+.modal {
+  position: fixed;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.55);
+  display: flex; /* <<< ESSENCIAL PARA CENTRALIZAR */
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+
+.modal-content {
+  width: 420px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.modal-close {
+  float: right;
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.qr-wrap {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.modal-content textarea {
+  width: 100%;
+  height: 90px;
+  resize: none;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #1d3557;
+  color: #fff;
+  cursor: pointer;
+}
+/* ==== TABS (Visão Geral / Mês Atual / Histórico) ==== */
+.tabs {
+  display: flex;
+  gap: 10px;
+}
+
+.tabs button {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.tabs button:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.tabs .active {
+  background: #a8dadc;
+  color: #1d3557;
+  font-weight: bold;
+}
+
+/* ==== BOTÃO PAGAR TODAS ==== */
+.btn.primary {
+  background: #1d3557;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: 0.2s;
+}
+
+.btn.primary:hover {
+  background: #16325c;
+}
+
+/* ===== BOTÃO CARREGAR CHAVE PIX ===== */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* espaçamento entre label, select e botão */
+  margin-bottom: 25px;
+}
+
+#btnLoadKeys {
+  background: #457b9d; /* azul principal */
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 0.9em;
+}
+
+#btnLoadKeys:hover {
+  background: #1d3557; /* escurece ao passar o mouse */
+}
+
+#pixKeySelect {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  flex: 1; /* ocupa o espaço restante */
+}

@@ -1,115 +1,142 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vivace | Visão Geral Financeira</title>
+    <link rel="stylesheet" href="DashboardAdmin.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vivace | Visão Geral Financeira</title>
-  <link rel="stylesheet" href="DashboardAdmin.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
+  <body>
+    <header>
+      <div class="logo">Vivace</div>
+      <nav>
+        <button class="nav-btn active">Visão Geral</button>
+        <button class="nav-btn" id="btnFinanceiro">Financeiro</button>
+        <button class="nav-btn">Documentos</button>
+        <button
+          class="nav-btn"
+          onclick="window.location.href='./vistoria.html'"
+        >
+          Vistoria
+        </button>
+      </nav>
+    </header>
 
-<body>
-  <header>
-    <div class="logo">Vivace</div>
-    <nav>
-      <button class="nav-btn active">Visão Geral</button>
-      <button class="nav-btn" id="btnFinanceiro">Financeiro</button>
-      <button class="nav-btn">Documentos</button>
-      <button class="nav-btn" onclick="window.location.href='./vistoria.html'">Vistoria</button>
-    </nav>
-  </header>
+    <main>
+      <h1>Visão Geral Financeira</h1>
 
-  <main>
-    <h1>Visão Geral Financeira</h1>
-
-    <!-- Formulário de Adição de Mês -->
-    <section class="form-section">
-      <h3>Adicionar Mês</h3>
-      <div class="form">
-        <select id="mesInput">
-          <option value="">Selecione o Mês</option>
-          <option value="Janeiro" data-num="1">Janeiro</option>
-          <option value="Fevereiro" data-num="2">Fevereiro</option>
-          <option value="Março" data-num="3">Março</option>
-          <option value="Abril" data-num="4">Abril</option>
-          <option value="Maio" data-num="5">Maio</option>
-          <option value="Junho" data-num="6">Junho</option>
-          <option value="Julho" data-num="7">Julho</option>
-          <option value="Agosto" data-num="8">Agosto</option>
-          <option value="Setembro" data-num="9">Setembro</option>
-          <option value="Outubro" data-num="10">Outubro</option>
-          <option value="Novembro" data-num="11">Novembro</option>
-          <option value="Dezembro" data-num="12">Dezembro</option>
-        </select>
-
-        <select id="anoInput">
-          <option value="">Selecione o Ano</option>
-        </select>
-
-        <input type="number" id="receitaInput" placeholder="Receita (R$)" />
-        <input type="number" id="despesaInput" placeholder="Despesa Total (R$)" />
-        <input type="number" id="taxaInput" placeholder="Taxa de Cobrança (%)" />
-        <button id="addMesBtn">Adicionar Mês</button>
-      </div>
-    </section>
-
-    <!-- Indicadores -->
-    <section class="indicadores">
-      <div class="indicador">
-        <h3>Taxa de Cobrança</h3>
-        <div class="barra-progresso">
-          <div id="barraTaxa" class="preenchimento"></div>
-        </div>
-        <span id="percentualTaxa">0%</span>
-      </div>
-
-      <div class="indicador">
-        <h3>Inadimplentes</h3>
-        <span id="inadimplentes">0 unidades</span>
-        <span id="percentualInadimplentes">0% do total</span>
-      </div>
-    </section>
-
-    <!-- Gráficos lado a lado -->
-    <section class="graficos-container">
-      <div class="grafico">
-        <h3>Evolução Financeira — Receita x Despesa</h3>
-        <canvas id="graficoEvolucao"></canvas>
-        <h4>Meses adicionados:</h4>
-        <ul id="listaMesesRemover"></ul>
-      </div>
-
-      <div class="grafico">
-        <h3>Distribuição de Despesas — <span id="mesAnoUltimoMes">Nenhum mês adicionado</span></h3>
+      <!-- Formulário de Adição de Mês -->
+      <section class="form-section">
+        <h3>Adicionar Mês</h3>
         <div class="form">
-          <input type="text" id="nomeDespesaInput" placeholder="Nome da despesa" />
-          <input type="number" id="valorDespesaInput" placeholder="Valor (R$)" />
-          <button id="addDespesaBtn">Adicionar Despesa</button>
+          <select id="mesInput">
+            <option value="">Selecione o Mês</option>
+            <option value="Janeiro" data-num="1">Janeiro</option>
+            <option value="Fevereiro" data-num="2">Fevereiro</option>
+            <option value="Março" data-num="3">Março</option>
+            <option value="Abril" data-num="4">Abril</option>
+            <option value="Maio" data-num="5">Maio</option>
+            <option value="Junho" data-num="6">Junho</option>
+            <option value="Julho" data-num="7">Julho</option>
+            <option value="Agosto" data-num="8">Agosto</option>
+            <option value="Setembro" data-num="9">Setembro</option>
+            <option value="Outubro" data-num="10">Outubro</option>
+            <option value="Novembro" data-num="11">Novembro</option>
+            <option value="Dezembro" data-num="12">Dezembro</option>
+          </select>
+
+          <select id="anoInput">
+            <option value="">Selecione o Ano</option>
+          </select>
+
+          <input type="number" id="receitaInput" placeholder="Receita (R$)" />
+          <input
+            type="number"
+            id="despesaInput"
+            placeholder="Despesa Total (R$)"
+          />
+          <input
+            type="number"
+            id="taxaInput"
+            placeholder="Taxa de Cobrança (%)"
+          />
+          <button id="addMesBtn">Adicionar Mês</button>
         </div>
-        <ul id="listaDespesas"></ul>
-        <canvas id="graficoDespesas"></canvas>
+      </section>
+
+      <!-- Indicadores -->
+      <section class="indicadores">
+        <div class="indicador">
+          <h3>Taxa de Cobrança</h3>
+          <div class="barra-progresso">
+            <div id="barraTaxa" class="preenchimento"></div>
+          </div>
+          <span id="percentualTaxa">0%</span>
+        </div>
+
+        <div class="indicador">
+          <h3>Inadimplentes</h3>
+          <span id="inadimplentes">0 unidades</span>
+          <span id="percentualInadimplentes">0% do total</span>
+        </div>
+      </section>
+
+      <div class="fatura">
+        <span>Faturas</span>
+        <button class="btngerarfatura">➕ Gerar Fatura</button>
       </div>
-    </section>
 
-    <section class="tabela">
-      <h3>Meses Adicionados</h3>
-      <table id="tabelaMeses">
-        <thead>
-          <tr>
-            <th>Mês/Ano</th>
-            <th>Receita (R$)</th>
-            <th>Despesa (R$)</th>
-            <th>Taxa (%)</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </section>
-  </main>
+      <!-- Gráficos lado a lado -->
+      <section class="graficos-container">
+        <div class="grafico">
+          <h3>Evolução Financeira — Receita x Despesa</h3>
+          <canvas id="graficoEvolucao"></canvas>
+          <h4>Meses adicionados:</h4>
+          <ul id="listaMesesRemover"></ul>
+        </div>
 
-  <script src="DashboardAdmin.js"></script>
-</body>
+        <div class="grafico">
+          <h3>
+            Distribuição de Despesas —
+            <span id="mesAnoUltimoMes">Nenhum mês adicionado</span>
+          </h3>
+          <div class="form">
+            <input
+              type="text"
+              id="nomeDespesaInput"
+              placeholder="Nome da despesa"
+            />
+            <input
+              type="number"
+              id="valorDespesaInput"
+              placeholder="Valor (R$)"
+            />
+            <button id="addDespesaBtn">Adicionar Despesa</button>
+          </div>
+          <ul id="listaDespesas"></ul>
+          <canvas id="graficoDespesas"></canvas>
+        </div>
+      </section>
 
+      <section class="tabela">
+        <h3>Meses Adicionados</h3>
+        <table id="tabelaMeses">
+          <thead>
+            <tr>
+              <th>Mês/Ano</th>
+              <th>Receita (R$)</th>
+              <th>Despesa (R$)</th>
+              <th>Taxa (%)</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </main>
+
+    <script src="DashboardAdmin.js"></script>
+  </body>
 </html>

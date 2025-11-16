@@ -1,95 +1,108 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Mês Atual | Vivace</title>
+    <link rel="stylesheet" href="PagamentosMesAtual.css" />
+  </head>
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Mês Atual | Vivace</title>
-  <link rel="stylesheet" href="PagamentosMesAtual.css" />
-</head>
-
-<body>
-  <header class="top-bar">
-    <div>
-      <h2>Pagamentos e Gastos</h2>
-      <p class="sub">Apt 101 - João Silva</p>
-    </div>
-    <div>
-      <button id="btnExport" class="btn small secondary">⬇️ Exportar Extrato</button>
-    </div>
-  </header>
-
-  <nav class="tabs">
-    <a href="index.html"><button>Visão Geral</button></a>
-    <a href="./PagamentosMesAtual.html"><button class="active">Mês Atual</button></a>
-    <a href="./PagamentosHistorico.html"><button>Histórico</button></a>
-  </nav>
-
-  <main class="content">
-    <div class="controls">
-      <label>Chaves PIX (do banco):
-        <button id="btnLoadKeys" class="btn small">Carregar chaves</button>
-      </label>
-      <select id="pixKeySelect">
-        <option value="">— selecionar chave do DB —</option>
-      </select>
-      <button id="btnUseManual" class="btn small">Inserir chave manual</button>
-    </div>
-
-    <h3>Contas de Outubro/2025</h3>
-    <div id="bills"></div>
-
-    <div class="resumo">
+  <body>
+    <header class="top-bar">
       <div>
-        <div>Total do Mês</div>
-        <div class="total-amount" id="totalAmount">R$ 0,00</div>
+        <h2>Pagamentos e Gastos</h2>
+        <p class="sub">Apt 101 - João Silva</p>
       </div>
-      <button id="payAll" class="btn primary">💳 Pagar Todas as Pendentes</button>
-    </div>
-  </main>
 
-  <!-- Modal PIX -->
-  <div id="pixModal" class="modal hidden" aria-hidden="true">
-    <div class="modal-content">
-      <button class="modal-close" id="modalClose">✕</button>
-      <h3 id="modalTitle">Pagar</h3>
+      <div>
+        <nav class="tabs">
+          <a href="index.html"><button>Visão Geral</button></a>
+          <a href="./PagamentosMesAtual.html"
+            ><button class="active">Mês Atual</button></a
+          >
+          <a href="./PagamentosHistorico.html"><button>Histórico</button></a>
+        </nav>
+      </div>
+    </header>
 
-      <div class="modal-row">
-        <div class="qr-wrap"><canvas id="qrCanvas" width="320" height="320"></canvas></div>
+    <main class="content">
+      <!-- Chaves PIX -->
+      <div class="controls">
+        <label>Chaves PIX:</label>
+        <button id="btnLoadKeys" class="btn small">Carregar</button>
 
-        <div class="meta-wrap">
-          <div><strong>Valor a pagar</strong></div>
-          <div class="modal-value" id="modalValue">R$ 0,00</div>
+        <select id="pixKeySelect">
+          <option value="">— selecione uma chave —</option>
+          <option
+            value='{"valor":"04991321069","nome":"Vivace Condomínio","cidade":"Caxias do Sul"}'
+          >
+            Vivace Condomínio 
+          </option>
+        </select>
+        <button id="btnExport" class="btn small secondary">
+          ⬇️ Exportar Extrato
+        </button>
+      </div>
 
-          <table class="meta">
-            <tr>
-              <td>Beneficiário:</td>
-              <td id="modalBenef">Vivace Condomínio</td>
-            </tr>
-            <tr>
-              <td>Unidade:</td>
-              <td id="modalUnit">Apt 101</td>
-            </tr>
-            <tr>
-              <td>Descrição:</td>
-              <td id="modalDesc">-</td>
-            </tr>
-          </table>
+      <h3>Contas do Mês</h3>
 
-          <label class="label">Código PIX (Copia & Cola)</label>
-          <textarea id="modalPayload" readonly></textarea>
+      <div id="bills"></div>
 
-          <div class="modal-actions">
-            <button id="copyBtn" class="btn primary">📋 Copiar</button>
-            <button id="downloadBtn" class="btn">⬇️ Baixar QR</button>
+      <div class="resumo">
+        <div>
+          <div>Total do Mês</div>
+          <div class="total-amount" id="totalAmount">R$ 0,00</div>
+        </div>
+        <button id="payAll" class="btn primary">
+          💳 Pagar Todas as Pendentes
+        </button>
+      </div>
+    </main>
+
+    <!-- MODAL PIX 100% compatível com seu JS -->
+    <div id="pixModal" class="modal hidden">
+      <div class="modal-content">
+        <button class="modal-close" id="modalClose">✕</button>
+
+        <h3 id="modalTitle">Pagar</h3>
+
+        <div class="modal-row">
+          <div class="qr-wrap">
+            <canvas id="qrCanvas" width="320" height="320"></canvas>
+          </div>
+
+          <div class="meta-wrap">
+            <div><strong>Valor a pagar</strong></div>
+            <div class="modal-value" id="modalValue">R$ 0,00</div>
+
+            <table class="meta">
+              <tr>
+                <td>Beneficiário:</td>
+                <td id="modalBenef">Vivace Condomínio</td>
+              </tr>
+              <tr>
+                <td>Unidade:</td>
+                <td id="modalUnit">Apt 101</td>
+              </tr>
+              <tr>
+                <td>Descrição:</td>
+                <td id="modalDesc">-</td>
+              </tr>
+            </table>
+
+            <label class="label">Código PIX (Copia & Cola)</label>
+            <textarea id="modalPayload" readonly></textarea>
+
+            <div class="modal-actions">
+              <button id="copyBtn" class="btn primary">📋 Copiar</button>
+              <button id="downloadBtn" class="btn">⬇️ Baixar QR</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
-  <script src="./PagamentosMesAtual.js"></script>
-</body>
-
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script src="./PagamentosMesAtual.js"></script>
+  </body>
 </html>
