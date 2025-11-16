@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Vivace.DTOs;
 using Vivace.Interfaces;
 using Vivace.Models;
+using VIVACE;
 using VIVACE.DTOs;
 using VIVACE.Models;
 
@@ -14,10 +15,14 @@ namespace Vivace.Controllers
     public class DashboardController : ControllerBase
     {
         private readonly IDashboardService _dashboardService;
+        private readonly IFaturaService _faturaService;
+        private readonly IPagamentoService _pagamentoService; // 🔹 Adicionado
 
-        public DashboardController(IDashboardService dashboardService)
+        public DashboardController(IDashboardService dashboardService, IFaturaService faturaService, IPagamentoService pagamentoService)
         {
             _dashboardService = dashboardService;
+            _faturaService = faturaService;
+            _pagamentoService = pagamentoService;
         }
 
         [HttpGet("meses")]
@@ -96,6 +101,23 @@ namespace Vivace.Controllers
             var success = await _dashboardService.RemoverMesAsync(id);
             if (!success) return NotFound();
             return Ok();
+        }
+
+        [HttpPost("criar-fatura-dashboard")]
+        public async Task<IActionResult> CriarFaturaDashboard([FromBody] FaturaCreateDto dto)
+        {
+            if (!ModelState.IsValid) return BadRequest("Dados inválidos");
+
+            // 🔹 Envia a fatura para o PagamentosMesAtual
+            try
+            {
+                var fatura = await _pagamentoService.AdicionarFaturaMesAtualAsync(dto);
+                return Ok(fatura);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         private int MesParaNumero(string mes)

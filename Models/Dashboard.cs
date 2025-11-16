@@ -18,5 +18,8 @@ namespace VIVACE.Models
 
         // Relacionamento com despesas
         public List<Despesa> Despesas { get; set; } = new();
+
+        // 🔹 Relacionamento com faturas
+        public List<Fatura> Faturas { get; set; } = new();
     }
 }

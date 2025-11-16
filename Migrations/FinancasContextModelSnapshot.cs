@@ -22,6 +22,42 @@ namespace Vivace.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Fatura", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DashboardId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Paga")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Unidade")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Valor")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("Vencimento")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DashboardId");
+
+                    b.ToTable("Faturas");
+                });
+
             modelBuilder.Entity("VIVACE.Models.Dashboard", b =>
                 {
                     b.Property<int>("Id")
@@ -49,8 +85,8 @@ namespace Vivace.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Taxa")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
 
                     b.HasKey("Id");
 
@@ -137,6 +173,17 @@ namespace Vivace.Migrations
                     b.ToTable("Pagamentos");
                 });
 
+            modelBuilder.Entity("Fatura", b =>
+                {
+                    b.HasOne("VIVACE.Models.Dashboard", "Dashboard")
+                        .WithMany("Faturas")
+                        .HasForeignKey("DashboardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Dashboard");
+                });
+
             modelBuilder.Entity("Vivace.Models.Despesa", b =>
                 {
                     b.HasOne("VIVACE.Models.Dashboard", "Dashboard")
@@ -151,6 +198,8 @@ namespace Vivace.Migrations
             modelBuilder.Entity("VIVACE.Models.Dashboard", b =>
                 {
                     b.Navigation("Despesas");
+
+                    b.Navigation("Faturas");
                 });
 #pragma warning restore 612, 618
         }

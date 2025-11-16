@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Vivace.Migrations
 {
     /// <inheritdoc />
-    public partial class CriacaoTabelaDashboard : Migration
+    public partial class DashboardFaturaUpdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,7 +21,7 @@ namespace Vivace.Migrations
                     Ano = table.Column<int>(type: "int", nullable: false),
                     Receita = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Despesa = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    Taxa = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Taxa = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: false),
                     MesNumero = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -47,6 +47,19 @@ namespace Vivace.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PixKeys",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Chave = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PixKeys", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Despesas",
                 columns: table => new
                 {
@@ -69,9 +82,38 @@ namespace Vivace.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Faturas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Valor = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Unidade = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Vencimento = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Paga = table.Column<bool>(type: "bit", nullable: false),
+                    DashboardId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Faturas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Faturas_Dashboards_DashboardId",
+                        column: x => x.DashboardId,
+                        principalTable: "Dashboards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Despesas_DashboardId",
                 table: "Despesas",
+                column: "DashboardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Faturas_DashboardId",
+                table: "Faturas",
                 column: "DashboardId");
         }
 
@@ -82,7 +124,13 @@ namespace Vivace.Migrations
                 name: "Despesas");
 
             migrationBuilder.DropTable(
+                name: "Faturas");
+
+            migrationBuilder.DropTable(
                 name: "Pagamentos");
+
+            migrationBuilder.DropTable(
+                name: "PixKeys");
 
             migrationBuilder.DropTable(
                 name: "Dashboards");

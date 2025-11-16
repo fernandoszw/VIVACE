@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Vivace.Context;
 using Vivace.Interfaces;
 using Vivace.Service;
+using VIVACE;
+using VIVACE.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<FinancasContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConexaoPadrao")));
 
+// Se você tem uma implementação chamada FaturaService
+builder.Services.AddScoped<IFaturaService, FaturaService>();
+
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+
+builder.Services.AddScoped<IPagamentoService, PagamentoService>();
+
 
 builder.Services.AddControllers();
 
